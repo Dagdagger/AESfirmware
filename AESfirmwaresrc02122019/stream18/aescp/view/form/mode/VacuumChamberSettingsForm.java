@@ -256,7 +256,7 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 		TestVars.setSettlevar(Double.valueOf(settleTimeTF.getText()));
 		TestVars.setTestvar(Double.valueOf(testTimeTF.getText()));
 		TestVars.setpressureVar(Double.valueOf(pressureTF.getText()));
-		TestVars.setpressureToleranceVar(Double.valueOf(toleranceTF.getText()));
+		TestVars.setpressureToleranceVar(0.01*(Double.valueOf(toleranceTF.getText())));
 		TestVars.setBleedTime(Double.valueOf(bleedTimerTF.getText()));
 		TestVars.setClampTime(Double.valueOf(clampTimerTF.getText()));
 		TestVars.setSliderTime(Double.valueOf(sliderTimerTF.getText()));

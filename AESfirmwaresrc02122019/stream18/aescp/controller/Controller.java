@@ -100,13 +100,14 @@ public class Controller {
 				switch(event.getID()) {
 					case Button.STOP_TEST_REQ:	
 						
+						boolean bleedValves[] = {false, false, false, false, false,false, false, false, false, true};
 						boolean cleanValves[] = {false, false, false, false, false,false, false, false, false, false};
 						// We can change status to READY now. It will trigger and event to change
 						// the status label in the status form
 						theTestStatus.setStatus(Status.READY);	
 						theTestPhaseVar.setPhase(Phase.FINISHED);
 						// TODO: Stop the test
-						ADCDriver.sendData(cleanValves);
+						ADCDriver.sendData(bleedValves);
 						theTestPhaser.setPhaseVar(Phase.FINISHED);
 						ResultsForm results = theTestPhaser.getResultsForm();
 						results.setResultFieldWait(true);
@@ -114,6 +115,7 @@ public class Controller {
 
 						
 						System.out.println("Test stop requested!");
+						ADCDriver.sendData(bleedValves);
 					
 				}
 			}

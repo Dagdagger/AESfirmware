@@ -114,11 +114,13 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 				long timer = (long)phaseCfgTime;
 				double firstValue = 0;
 				int i = 2;
-				int samplesToFill = 3;
+				int samplesToFill = 10;
+				System.out.println(TestVars.getChargevar());
 				// Acquire data on enabled ADCs until the time required has elapsed
 				phaseStartTime = System.currentTimeMillis();
 				while ((System.currentTimeMillis() - phaseStartTime) < phaseCfgTime) {
 					// Acquire data on active ADCs
+					System.out.println(phaseCfgTime);
 					if (phaseCfg.anyAdcEnabled()) {
 						i--;
 						long adcStartTime = System.currentTimeMillis();
@@ -128,11 +130,14 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 						}
 						if (phaseVar.getPhase() == Phase.FILL) {
 							double pressure =  TestVars.getpressureVar();
-							if ((adcValues[3]  > (pressure - (0.5*pressure))) && (adcValues[3]  < (pressure + (0.5*pressure)))) {
-								System.out.println("Reached Pressure");
-								
+							System.out.println("+ or -" + TestVars.getpressureToleranceVar()*pressure);
+							if ((adcValues[3]  > (pressure - (TestVars.getpressureToleranceVar()*pressure))) && (adcValues[3]  < (pressure + (TestVars.getpressureToleranceVar()*pressure)))) {
+								System.out.println("Reached once");
+								samplesToFill--;
+								System.out.println(samplesToFill);
 								if(samplesToFill == 0) {
-								boolean filled = true;
+								filled = true;
+								System.out.println("Reached Pressure");
 								break;
 								}
 							}
@@ -151,10 +156,10 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 				}
 				 if (phaseVar.getPhase() == Phase.SETTLE) {
 						
-						if ((((firstValue - adcValues[3])/firstValue) < 0.70) && (!filled)) {
+						if ((((firstValue - adcValues[3])/firstValue) < TestVars.getpressureToleranceVar()) && (!filled)) {
 								phaseVar.setPhase(Phase.FAIL);
 								phaseCfg = theTestModeCfg.getPhaseCfg(phaseVar.getPhase());
-								System.out.println("FAILED TEST");
+								System.out.println("FAILED DURING SETTLE");
 								pass = false;
 								theresultsform.setResult("FAIL GROSS LEAK " + Double.toString(adcValues[3]));
 						}
@@ -170,10 +175,12 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 				
 				if (phaseVar.getPhase() == Phase.FILL) {
 					
-					if (((firstValue - adcValues[3])/firstValue < 0.70) && (!filled)) {
+					//if (((firstValue - adcValues[3])/firstValue < TestVars.getpressureToleranceVar()) && (!filled)) { 
+					
+					if (!filled) {
 							phaseVar.setPhase(Phase.FAIL);
 							phaseCfg = theTestModeCfg.getPhaseCfg(phaseVar.getPhase());
-							System.out.println("FAILED TEST");
+							System.out.println("FAILED DURING FILL DIDNT REACH PRESSURE");
 							pass = false;
 							theresultsform.setResult("FAIL GROSS LEAK " + Double.toString(adcValues[3]));
 					}
@@ -193,7 +200,7 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 						
 						phaseVar.setPhase(Phase.FAIL);
 						phaseCfg = theTestModeCfg.getPhaseCfg(phaseVar.getPhase());
-						System.out.println("FAILED DECAY TEST");
+						System.out.println("FAILED DURING DECAY TEST");
 						pass = false;
 						theresultsform.setResult("FAIL Decay LEAK " + Double.toString(adcValues[3]));
 					}  else {

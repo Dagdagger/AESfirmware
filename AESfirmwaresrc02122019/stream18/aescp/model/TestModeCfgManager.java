@@ -92,9 +92,9 @@ public class TestModeCfgManager {
 		PhaseCfg phaseFILL2 = new PhaseCfg(Phase.FILL, testModeVacuumChamber);
 		phaseFILL2.setValves(cleanValves);
 		phaseFILL2.setValve(9, false);
-		phaseFILL2.setValve(8, true); //
+		phaseFILL2.setValve(8, false); //
 		phaseFILL2.setValve(7, true); // fill on
-		//phaseFILL2.setValve(3, true);
+		phaseFILL2.setValve(3, false);
 		phaseFILL2.setPhaseTime(chargeTime*1000);
 		phaseFILL2.enableADC(2);
 		cleanValves = phaseFILL2.getValves();
@@ -110,7 +110,7 @@ public class TestModeCfgManager {
 		phaseSETTLE2.setValves(cleanValves);
 		phaseSETTLE2.setValve(7, false);
 		phaseSETTLE2.setValve(8, true);
-		phaseSETTLE2.setValve(3, true);
+		//phaseSETTLE2.setValve(3, true);
 		phaseSETTLE2.setPhaseTime(settleTime*1000);
 		phaseSETTLE2.enableADC(3);
 		cleanValves = phaseSETTLE2.getValves();
@@ -165,6 +165,7 @@ public class TestModeCfgManager {
 		
 		PhaseCfg phase_FAIL = new PhaseCfg(Phase.FAIL, testModeVacuumChamber);
 		 phase_FAIL.setValves(emptyValves);
+		 phase_FAIL .setValve(3, true);
 		 phase_FAIL.setPhaseTime(500);		
 		 phase_FAIL.disableADCs();
 		 phase_FAIL.setNextPhase(Phase.H_BACK);
