@@ -24,7 +24,7 @@ public class Browser extends JFrame {
 	private static final long serialVersionUID = 1L;
 	public final static int SCREEN_WIDTH = 800;
 	public final static int SCREEN_HEIGHT = 480;
-	public final static Font FONT = new Font(Font.DIALOG, Font.PLAIN, 14);
+	public final static Font FONT = new Font(Font.DIALOG, Font.PLAIN, 20);
 	public final static Font FONT_2 = new Font(Font.DIALOG, Font.PLAIN, 20);
 	public final static Font FONT_BIG = new Font(Font.DIALOG, Font.BOLD, 24);
 	private static Browser theBrowser = null;

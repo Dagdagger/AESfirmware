@@ -60,7 +60,7 @@ public abstract class ResultsForm extends Form {
     	testField.setEditable(false);
     	
     	resultValueField = createTextFieldWithUnits(getResultValueText(), x, y + 50, 160, 10, false, getResultValueUnits());
-    	resultValueField.setText("0");
+    	resultValueField.setText("0.0000");
     	resultValueField.setEditable(false);
     	
     	
@@ -105,10 +105,10 @@ public abstract class ResultsForm extends Form {
 	}
 	
 	public void setResultFieldTesting(boolean visibility){
-			resultFieldWait.setVisible(false);
-			resultFieldPass.setVisible(false);
-			resultFieldFail.setVisible(false);
-			resultFieldTesting.setVisible(visibility);
+		resultFieldWait.setVisible(false);
+		resultFieldPass.setVisible(false);
+		resultFieldFail.setVisible(false);
+		resultFieldTesting.setVisible(visibility);
 
 	}
 	public void setResultFieldPass(boolean visibility) throws InterruptedException {
@@ -119,7 +119,10 @@ public abstract class ResultsForm extends Form {
 		resultFieldPass.setVisible(false);
 		resultFieldWait.setVisible(true);
 
-}
+     }
+	public void setResultFieldDecay(String message) {
+		resultValueField.setText(message);
+     }
 	
 	public void setResultFieldWait(boolean visibility) {
 		resultFieldTesting.setVisible(false);

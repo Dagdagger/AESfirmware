@@ -150,6 +150,8 @@ public static double getTemperatureVar() {
 	}
 
 	static int  testcountervar;
+	private static Double minPressureDrop;
+	private static Double maxPressureDrop;
 
 	public static double getChargevar() {
 		return chargevar;
@@ -183,6 +185,16 @@ public static double getTemperatureVar() {
 	public static void setDecay(double decay) {
 		TestVars.testDecayvar = decay;
 	}
+	
+	public static void setminPressureDrop(Double minPressureDrop) {
+		TestVars.minPressureDrop = minPressureDrop;
+	}
+
+
+	public static void setmaxPressureDrop(Double maxPressureDrop) {
+		TestVars.maxPressureDrop = maxPressureDrop;
+		
+	}
 
  
 
@@ -197,6 +209,8 @@ public static double getTemperatureVar() {
 		}
 		return theTestVars;
 	}
+
+
 
  
 }

@@ -14,6 +14,8 @@ public class ADCValuesBuffer {
 		count = 0;
 	}
 
+	//TODO: Either concatenate double trailing zeroes or 
+	// turn into int
 	public static void store(long ts, double[] adcValues) throws Exception {
 		timestamps[count] = ts;
 		values[count][0] = adcValues[0];

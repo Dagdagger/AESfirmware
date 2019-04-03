@@ -1,5 +1,9 @@
 package stream18.aescp.view.screen.mode;
 import stream18.aescp.controller.TestMode.Mode;
+import stream18.aescp.view.button.DownProgramButton;
+import stream18.aescp.view.button.LogsNavButton;
+import stream18.aescp.view.button.UpLogsButton;
+import stream18.aescp.view.button.UpProgramButton;
 import stream18.aescp.view.form.TopForm;
 import stream18.aescp.view.form.mode.VacuumChamberForm;
 import stream18.aescp.view.form.mode.VacuumChamberResultsForm;
@@ -17,7 +21,9 @@ public class VacuumChamberScreen extends SK_ModeScreen {
     			VacuumChamberResultsForm.getInstance(null),
     			VacuumChamberForm.getInstance(null),
     			VacuumChamberSettingsForm.getInstance(null));
-
+    	
+		leftSide.add(new UpProgramButton(LogsNavButton.DEFAULT_X, LogsNavButton.DEFAULT_Y-300));
+    	leftSide.add(new DownProgramButton(LogsNavButton.DEFAULT_X, LogsNavButton.DEFAULT_Y-200));
     	this.setTestMode(Mode.VACUUMCHAMBER);
     	System.out.println("Mode set: " +this.getTestMode());
     }

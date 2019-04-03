@@ -73,7 +73,7 @@ public class TopForm extends Form {
 		getProgramlbl().setBackground(new Color(0xeeeeee));
 		getProgramlbl().setBorder(border);	
 		getProgramlbl().setFont(font);
-		progNumber = createStatusText("01", 64 , 12, 40);
+		progNumber = createStatusText("1", 64 , 12, 40);
 		//Screen.setComponentZOrder(progNumber, 12);
 		 
 		testModelbl = createStatusText("Mode:", 116 , 1, 56);

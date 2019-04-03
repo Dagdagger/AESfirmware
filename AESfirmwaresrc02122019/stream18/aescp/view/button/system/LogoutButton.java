@@ -24,7 +24,7 @@ public class LogoutButton extends Button {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				super.mouseReleased(e);
-				System.exit(0);
+				//System.exit(0);
 				// Select a new Screen for the browser
 				int shouldLogout = Browser.getInstance().displayDialog("Are you sure you want to logout?");
 				if (shouldLogout == 0) {

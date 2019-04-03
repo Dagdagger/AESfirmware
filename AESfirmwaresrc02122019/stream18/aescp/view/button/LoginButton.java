@@ -5,14 +5,27 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.String;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
 import javax.swing.JOptionPane;
+
+//import com.mysql.cj.xdevapi.Statement;
 
 import stream18.aescp.controller.TestVars;
 import stream18.aescp.view.form.system.UserForm;
 import stream18.aescp.view.screen.HomeScreen;
  
+//import stream18.aescp.model.DBConnection;
 
 public class LoginButton extends Button {
+	
 	private static final long serialVersionUID = 1L;
 	private static LoginButton theOkButton;
 	
@@ -29,10 +42,14 @@ public class LoginButton extends Button {
 				
 				//isAccessValid(UserForm.usernameField.getText(), 
 						//	UserForm.passwordField.getText(), UserForm.roleField.getSelectedIndex());				
-				isAccessValid(UserForm.passwordField.getText(), UserForm.userField.getSelectedIndex());
-	 
-				System.out.println("user" + " " + UserForm.userField.getSelectedItem()+" "+ "Logged in");	 
-		        TestVars.setTestUservar(String.valueOf(UserForm.userField.getSelectedItem()));
+				//isAccessValid(UserForm.passwordField.getText(), UserForm.userField.getSelectedIndex());
+				
+				isAccessValid(UserForm.passwordField.getText(), UserForm.userField.getText());
+				
+				//System.out.println("user" + " " + UserForm.userField.getSelectedItem()+" "+ "Logged in");	 
+				System.out.println("user" + " " + UserForm.userField.getText()+" "+ "Logged in");
+		        //TestVars.setTestUservar(String.valueOf(UserForm.userField.getSelectedItem()));
+				TestVars.setTestUservar(String.valueOf(UserForm.userField.getText()));
 			}
 		});
 	}	
@@ -46,79 +63,64 @@ public class LoginButton extends Button {
 	}
 	
 	
-	public static LoginButton isAccessValid(String password, int role) {
-		if ((password.equals("1"))&&(role==0)) 
-		{
-			HomeScreen.getInstance().setActive(null);
+	public static LoginButton isAccessValid(String password, String role) {
+		System.out.println("Hello 0");
+		//String user = UserForm.userField.getText();
+		String user = role;
+		try{  
+			Class.forName("com.mysql.cj.jdbc.Driver");  
+			System.out.println("Hello 1");
+			Connection con=DriverManager.getConnection(  
+			"jdbc:mysql://localhost:3306/aes?serverTimezone=UTC","root","");  
+			System.out.println("Hello 2");
+			//database name, root is username and password  
+			java.sql.Statement stmt=con.createStatement();  
+			System.out.println("Hello 3");
+			//ResultSet rs=stmt.executeQuery("select * from Users");
 			
-			//ReadyScreen_A.getInstance().setActive(null);
+			ResultSet rs=stmt.executeQuery("select * from Users where uname = '" + user + "' && psswd ='" + password+ "'");
+			//"SELECT * FROM users WHERE users_name='" + name + "' && users_password='" + password+ "'"
+			System.out.println("Hello 4");
+			//while(rs.next())  
+			//	System.out.println(rs.getInt(1)+"  "+rs.getString(2)+" "+rs.getString(3)+"  "+rs.getString(4));
+			//HomeScreen.getInstance().setActive(null);
+			if(rs.next())
+            {
+            	HomeScreen.getInstance().setActive(null);
+            }
+           else{
+                   //JOptionPane.showMessageDialog(null, "Incorrect Username Or Password", "Login Failed", 2);
+                    JOptionPane.showMessageDialog(null, "Access Not Allowed");
+               }
+			con.close();  
 			
-		}
-		else if((password.equals("2"))&&(role==1))
-		{
-			HomeScreen.getInstance().setActive(null);
-		}
-		else if((password.equals("3"))&&(role==2))
-		{
-			HomeScreen.getInstance().setActive(null);
-		}
-		else if((password.equals("4"))&&(role==3))
-		{
-			HomeScreen.getInstance().setActive(null);
-		}
-		else if((password.equals("5"))&&(role==4))
-		{
-			HomeScreen.getInstance().setActive(null);
-		}
-		else if((password.equals("6"))&&(role==5))
-		{
-			HomeScreen.getInstance().setActive(null);
-		}
-		else if((password.equals("7"))&&(role==6))
-		{
-			HomeScreen.getInstance().setActive(null);
-		}
-		else if((password.equals("8"))&&(role==7))
-		{
-			HomeScreen.getInstance().setActive(null);
-		}
-		else if((password.equals("9"))&&(role==8))
-		{
-			HomeScreen.getInstance().setActive(null);
-		}
-		else if((password.equals("10"))&&(role==9))
-		{
-			HomeScreen.getInstance().setActive(null);
-		}
-		else if((password.equals("11"))&&(role==10))
-		{
-			HomeScreen.getInstance().setActive(null);
-		}
-		else if((password.equals("12"))&&(role==11))
-		{
-			HomeScreen.getInstance().setActive(null);
-		}
-		else if((password.equals("13"))&&(role==12))
-		{
-			HomeScreen.getInstance().setActive(null);
-		}
-		else if((password.equals("14"))&&(role==13))
-		{
-			HomeScreen.getInstance().setActive(null);
-		}
-		else if((password.equals("15"))&&(role==14))
-		{
-			HomeScreen.getInstance().setActive(null);
-		}
+			}catch(Exception e)
+				{ System.out.println(e);
+				}  
 		
-		
-		else
-		{
-			JOptionPane.showMessageDialog(null, "Access Not Allowed");
-
-		}
 		return theOkButton;
+			}  
+		
+		
+	
+	private static Connection getDBConnection() {
+		
+		Connection conn = null;
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/AES:3306","root","");
+			
+		}catch (Exception ex) {
+			System.out.println(ex.getMessage());
+		}
+		return conn;
 		
 		
 	}
+
 }
+	
+
+
+

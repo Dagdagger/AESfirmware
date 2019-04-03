@@ -10,7 +10,7 @@ public class DBConnection {
 			
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
-				conn = DriverManager.getConnection("jdbc:mysql://localhost/AES","root","");
+				conn = DriverManager.getConnection("jdbc:mysql://localhost/AESDB","root","");
 				
 			}catch (Exception ex) {
 				System.out.println(ex.getMessage());

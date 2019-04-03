@@ -76,18 +76,17 @@ public class Controller {
 						}	
 						// We can change status to Running now. It will trigger and event to change
 						// the status label in the status form
-						theTestStatus.setStatus(Status.RUNNING);			
+						theTestStatus.setStatus(Status.RUNNING);	
 						// We create a new testPhaser instance for each new test execution
 						// Check if a previous thread was running
 						if (theTestPhaser != null && theTestPhaser.getState() != Thread.State.TERMINATED) {							
 						System.out.println("Previous thread still on execution. But if will continue in a new Thread.");
 						 
 						}
-						 
+						if(theTestPhaser == null) {	
 					 	  theTestPhaser = new TestPhaser(theTestPhaseVar);	
-					 	  theTestPhaser.startNewTest(theTestMode.getTestMode());	
-					 	
-								
+					 	  theTestPhaser.startNewTest(theTestMode.getTestMode());
+						}
 				}
 			}
 			
@@ -99,16 +98,31 @@ public class Controller {
 			public void actionPerformed(ActionEvent event) {
 				switch(event.getID()) {
 					case Button.STOP_TEST_REQ:	
-						
-						boolean bleedValves[] = {false, false, false, false, false,false, false, false, false, true};
+						System.out.println("Test stop requested!");
+						boolean bleedValves[] = {true, true, false, false, false,false, false, false, false, true};
 						boolean cleanValves[] = {false, false, false, false, false,false, false, false, false, false};
 						// We can change status to READY now. It will trigger and event to change
 						// the status label in the status form
-						theTestStatus.setStatus(Status.READY);	
-						theTestPhaseVar.setPhase(Phase.FINISHED);
+						theTestStatus.setStatus(Status.SELECT);	
+						
+if (theTestPhaseVar.getPhase() != Phase.RESULTS && theTestPhaseVar.getPhase() != Phase.H_BACK && theTestPhaseVar.getPhase() != Phase.FAIL && theTestPhaseVar.getPhase() != Phase.V_BACK) {
+	theTestPhaser.interrupt();
+
+						theTestPhaser.setStopCase(true);
+						System.out.println("Test stop requested!");
+						//theTestPhaser.interrupt();
+
+						}
+if (theTestPhaseVar.getPhase() == Phase.RESULTS) {
+	
+	theTestStatus.setStatus(Status.READY);	
+	theTestPhaseVar.setPhase(Phase.FINISHED);
+	
+}else {
+
 						// TODO: Stop the test
-						ADCDriver.sendData(bleedValves);
-						theTestPhaser.setPhaseVar(Phase.FINISHED);
+						//ADCDriver.sendData(bleedValves);
+						//theTestPhaser.setPhaseVar(Phase.FAIL);
 						ResultsForm results = theTestPhaser.getResultsForm();
 						results.setResultFieldWait(true);
 						theTestPhaser.interrupt();
@@ -116,7 +130,7 @@ public class Controller {
 						
 						System.out.println("Test stop requested!");
 						ADCDriver.sendData(bleedValves);
-					
+}
 				}
 			}
 		});

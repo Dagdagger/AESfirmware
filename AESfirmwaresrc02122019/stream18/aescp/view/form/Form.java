@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.OptionalDouble;
 
@@ -25,30 +26,21 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
-import org.knowm.xchart.XChartPanel;
-import org.knowm.xchart.style.markers.None;
-
-import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
-//import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
-import javafx.scene.chart.XYChart;
 import stream18.aescp.Browser;
 import stream18.aescp.view.Plot;
 import stream18.aescp.view.Plot.AxisFormat;
 import stream18.aescp.view.Plot.AxisOptions;
 import stream18.aescp.view.Plot.Data;
 import stream18.aescp.view.Plot.LegendFormat;
-import stream18.aescp.view.Plot.Marker;
 import stream18.aescp.view.Plot.PlotOptions;
 import stream18.aescp.view.button.Button;
 import stream18.aescp.view.button.StartButton;
 import stream18.aescp.view.screen.Screen;
 import stream18.aescp.view.screen.VKScreen;
+//import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 public abstract class Form extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -154,6 +146,13 @@ public abstract class Form extends JPanel {
 		return createTextFieldInternal(labelText, x, y, labelsRight, tfCols, hasVK, true);
 	}
 	
+	protected JTextField createUserField(String labelText,
+
+			int x, int y,int labelsRight,
+				int tfCols,
+				boolean hasVK) {
+	return createTextFieldInternal(labelText, x, y, labelsRight, tfCols, hasVK, true);
+	}
 	protected JTextField createTextFieldInternal(String labelText,
 										int x, int y,
 										int labelsRight,
@@ -361,7 +360,6 @@ public abstract class Form extends JPanel {
 		return chartPanel;
 	}
 	
-	*/
 	/*
 	 * PLOT PANEL
 	 */
@@ -406,12 +404,11 @@ public abstract class Form extends JPanel {
 //			xyAxisOpts.format(AxisFormat.DATE.NUMBER_INT);
 
 //xAxisOpts.range(x[0], x[x.length-1]);
-xAxisOpts.range(0, 300 );
+xAxisOpts.range(0, x[x.length-1]);
 yAxisOpts.range(0, 700);
 
 			plot.xAxis("", xAxisOpts);
 			plot.yAxis("", yAxisOpts);
-
 			plot.series("", data, null);
 			
 			repaint();
@@ -460,7 +457,6 @@ yAxisOpts.range(0, 700);
 		  }
 		
 		
-		/////
 		public JTable createTable(Array row) {
 
 		

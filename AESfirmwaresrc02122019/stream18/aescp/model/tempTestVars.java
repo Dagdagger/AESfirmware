@@ -2,6 +2,8 @@ package stream18.aescp.model;
 
 import java.io.Serializable;
 
+import stream18.aescp.controller.TestVars;
+
 public class tempTestVars implements Serializable {
 	private static final long serialVersionUID = 1L;
 	double  chargevar;
@@ -21,6 +23,8 @@ public class tempTestVars implements Serializable {
 	String  testModevar;
 	int     testCountervar;
 	double  testDecayvar;
+	private Double minPressureDrop;
+	private Double maxPressureDrop;
 	
 	
 	
@@ -164,6 +168,29 @@ public double getTemperatureVar() {
 
 	public double getDecayVar() {
 		return this.testDecayvar;
+	}
+
+	public void setminPressureDrop(Double minPressureDrop) {
+		this.minPressureDrop = minPressureDrop;
+	}
+
+
+	public void setmaxPressureDrop(Double maxPressureDrop) {
+		this.maxPressureDrop = maxPressureDrop;
+		
+	
+		
+	}
+	public double getminPressureDrop(){
+		return this.minPressureDrop;
+	}
+
+
+	public double getmaxPressureDrop() {
+		return this.maxPressureDrop;
+		
+	
+		
 	}
 
  

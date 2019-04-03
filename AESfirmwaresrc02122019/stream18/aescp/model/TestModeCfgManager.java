@@ -20,19 +20,37 @@ import stream18.aescp.view.screen.logs.ShowLogsScreen2;
  */
 public class TestModeCfgManager {	
 	
+	
+	
+			static double chargeTime = 0.0;
+			static double settleTime = 0.0;
+			static double testTime = 0.0;
+			static double clampTime = 0.0;
+			static double bleedTime = 0.0;
+			static double sliderTime = 0.0;
+			
+			public static void setTimers() {
+		        chargeTime = TestVars.getChargevar();
+				settleTime = TestVars.getSettlevar();
+				testTime = TestVars.getTestvar();
+				clampTime = TestVars.getClampTime();
+				bleedTime = TestVars.getBleedTime();
+				sliderTime = TestVars.getSliderTime();
+				}
+			
+	
 	static Hashtable<Mode, TestModeCfg> testModeCfgs = new Hashtable<Mode,TestModeCfg>();
 	static {				
 		boolean cleanValves[] = {false, false, false, false, false,false, false, false, false, false};
 		boolean emptyValves[] = {false, false, false, false, false,false, false, false, false, false};
 		
-		TestVars tst = new TestVars();
 		TestModeCfg testModeVacuumChamber = new TestModeCfg(Mode.VACUUMCHAMBER);
-        double chargeTime = TestVars.getChargevar();
-		double settleTime = TestVars.getSettlevar();
-		double testTime = TestVars.getTestvar();
-		double clampTime = TestVars.getClampTime();
-		double bleedTime = TestVars.getBleedTime();
-		double sliderTime = TestVars.getSliderTime();
+		
+		
+		setTimers();
+		
+		
+		
 		
 		/* The valves in the array are as follows:
 		 * Clamp = 0
@@ -140,7 +158,7 @@ public class TestModeCfgManager {
 		phaseVENT2.setValves(cleanValves);
 		phaseVENT2.setValve(9, true);
 		phaseVENT2.setValve(8, false);
-		phaseVENT2.setPhaseTime(1000);
+		phaseVENT2.setPhaseTime(bleedTime*1000);
 		cleanValves = phaseVENT2.getValves();
 		phaseVENT2.setNextPhase(Phase.V_BACK);
 		
@@ -160,23 +178,53 @@ public class TestModeCfgManager {
 		//phaseH_BACK2.setValves(cleanValves);
 		phaseH_BACK2.setValves(emptyValves);
 		phaseH_BACK2.setValve(1, false);
-		phaseH_BACK2.setPhaseTime(500);
+		phaseH_BACK2.setValve(9, true);
+		phaseH_BACK2.setPhaseTime(2000);
 		phaseH_BACK2.setNextPhase(Phase.RESULTS);	
 		
-		PhaseCfg phase_FAIL = new PhaseCfg(Phase.FAIL, testModeVacuumChamber);
-		 phase_FAIL.setValves(emptyValves);
-		 phase_FAIL .setValve(3, true);
-		 phase_FAIL.setPhaseTime(500);		
+PhaseCfg phase_FAIL = new PhaseCfg(Phase.FAIL, testModeVacuumChamber);
+		 //phase_FAIL.setValves(emptyValves);
+		phase_FAIL.setValve(1, true);
+		 phase_FAIL.setValve(9, true);
+		 phase_FAIL.setValve(0, true);
+		 phase_FAIL.setPhaseTime(bleedTime*1000);		
 		 phase_FAIL.disableADCs();
-		 phase_FAIL.setNextPhase(Phase.H_BACK);
+		 phase_FAIL.setNextPhase(Phase.V_BACK);
 		 
 		 PhaseCfg phase_RESULTS = new PhaseCfg(Phase.RESULTS, testModeVacuumChamber);
 		 phase_RESULTS.setValves(emptyValves);
-		 phase_RESULTS.setPhaseTime(0);		
+		 phase_RESULTS.setPhaseTime(1000);		
 		 phase_RESULTS.disableADCs();
 		 phase_RESULTS.setNextPhase(Phase.FINISHED);
 		 
 		 
+		 PhaseCfg phase_STOPPED = new PhaseCfg(Phase.STOPPED, testModeVacuumChamber);
+		 //phase_FAIL.setValves(emptyValves);
+		phase_STOPPED.setValve(1, true);
+		 phase_STOPPED.setValve(9, true);
+		 phase_STOPPED.setValve(0, true);
+		 phase_STOPPED.setPhaseTime(bleedTime*1000);		
+		 phase_STOPPED.disableADCs();
+		 phase_STOPPED.setNextPhase(Phase.STOP_BACK);
+		 
+		 PhaseCfg phase_STOPBACK = new PhaseCfg(Phase.STOP_BACK, testModeVacuumChamber);
+		 //phase_FAIL.setValves(emptyValves);
+		 phase_STOPBACK.setValves(cleanValves);
+		 phase_STOPBACK.setValve(9,  false);
+		 phase_STOPBACK.setValve(0, false);
+		 phase_STOPBACK.setPhaseTime(5000);
+			cleanValves = phase_STOPBACK.getValves();
+			phase_STOPBACK.setNextPhase(Phase.STOP_HBACK);
+			
+			 PhaseCfg phase_STOPHBACK = new PhaseCfg(Phase.STOP_HBACK, testModeVacuumChamber);
+			 //phase_FAIL.setValves(emptyValves);
+			 phase_STOPHBACK.setValves(cleanValves);
+			 phase_STOPHBACK.setValve(1,  false);
+			 phase_STOPHBACK.setValve(9, true);
+			 phase_STOPHBACK.setPhaseTime(2000);
+			 cleanValves = phase_STOPHBACK.getValves();
+			 phase_STOPHBACK.setNextPhase(Phase.FINISHED);
+
 
 		 
 		
@@ -189,6 +237,11 @@ public class TestModeCfgManager {
 			sendTestData();
 	 
 	}
+	
+	
+	
+	
+	
 
 	public static TestModeCfg find(Mode mode) {
 		return testModeCfgs.get(mode);
