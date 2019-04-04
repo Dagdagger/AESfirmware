@@ -100,6 +100,7 @@ public class TestModeCfgManager {
 		phaseV_BLEED1.setValves(cleanValves);
 		phaseV_BLEED1.setValve(9, true);
 		phaseV_BLEED1.setPhaseTime(bleedTime*1000);		
+		phaseV_BLEED1.enableADC(3);
 		cleanValves = phaseV_BLEED1.getValves();
 		phaseV_BLEED1.setNextPhase(Phase.FILL);
 		
@@ -114,7 +115,7 @@ public class TestModeCfgManager {
 		phaseFILL2.setValve(7, true); // fill on
 		phaseFILL2.setValve(3, false);
 		phaseFILL2.setPhaseTime(chargeTime*1000);
-		phaseFILL2.enableADC(2);
+		phaseFILL2.enableADC(3);
 		cleanValves = phaseFILL2.getValves();
 
 		phaseFILL2.setNextPhase(Phase.SETTLE);
@@ -158,6 +159,7 @@ public class TestModeCfgManager {
 		phaseVENT2.setValves(cleanValves);
 		phaseVENT2.setValve(9, true);
 		phaseVENT2.setValve(8, false);
+		phaseVENT2.enableADC(3);
 		phaseVENT2.setPhaseTime(bleedTime*1000);
 		cleanValves = phaseVENT2.getValves();
 		phaseVENT2.setNextPhase(Phase.V_BACK);

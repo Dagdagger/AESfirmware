@@ -98,7 +98,7 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 	    
 		public void run() {
 			//while(!Thread.interrupted()) {
-				theresultsform.setResultFieldTesting(true);
+			theresultsform.setResultFieldTesting(true);
 			PhaseCfg phaseCfg;
 			long phaseStartTime;
 			double phaseCfgTime; 
@@ -156,7 +156,7 @@ phaseCfgTime = phaseCfg.getPhaseTime();
 				// Acquire data on enabled ADCs until the time required has elapsed
 				phaseStartTime = System.currentTimeMillis();
 				while ((System.currentTimeMillis() - phaseStartTime) < phaseCfgTime) {
-					// Acquire data on active ADCs
+				// Acquire data on active ADCs
 				//	System.out.println(phaseCfgTime);
 					
 					
@@ -245,9 +245,23 @@ phaseCfgTime = phaseCfg.getPhaseTime();
 				
 				if (phaseVar.getPhase() == Phase.FILL) {
 					
-					//if (((firstValue - adcValues[3])/firstValue < TestVars.getpressureToleranceVar()) && (!filled)) { 
+					double averageOfLastValues = 0;
+					if(!(num.size()  > 10)) {
+					int index = num.size()-10;
+					double avgTotal = 0; 
+					//averageOfLastValues;
 					
-					if (!filled && (adcValues[3]  < (pressure - (TestVars.getpressureToleranceVar()*pressure)))) {
+					for (int j = index; j< num.size(); j++) {
+						avgTotal= num.get(j) + avgTotal;
+						
+					}
+					
+					
+					
+					averageOfLastValues = avgTotal/10;
+					}
+					
+					if (!filled && (averageOfLastValues < (pressure - (TestVars.getpressureToleranceVar()*pressure)))) {
 							//phaseVar.setPhase(Phase.FAIL);
 							phaseCfg = theTestModeCfg.getPhaseCfg(phaseVar.getPhase());
 							System.out.println("FAILED DURING FILL DIDNT REACH PRESSURE");
@@ -279,7 +293,7 @@ phaseCfgTime = phaseCfg.getPhaseTime();
 			if (phaseVar.getPhase() == Phase.TEST) {
 				
 				
-				
+				/* delete all 0s */
 				for (Iterator<Double> iterator = num.iterator(); iterator.hasNext();) {
 				    Double number = iterator.next();
 				    if (number  == 0.0) {
@@ -394,6 +408,7 @@ phaseCfgTime = phaseCfg.getPhaseTime();
 			
 
 }
+
 		
 		
 		public long setTimer() {

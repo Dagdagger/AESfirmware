@@ -37,7 +37,7 @@ public class UserForm extends Form {
 	public static JTextField companyPhone;
 	
  
-	public static JComboBox userField;
+	public static JTextField userField;
 	public static String[] userValues = {
 								"Operator 1", "Operator 2", "Operator 3", "Operator 4", "Operator 5",
 								"Supervisor 1", "Supervisor 2", "Supervisor 3", "Supervisor 4", "Supervisor 5",
@@ -52,8 +52,9 @@ public class UserForm extends Form {
 		Border border = BorderFactory.createLineBorder(new Color(0xeeeeee));
 		Font font = new Font("Courier", Font.BOLD,12);
 
-		
-		userField = createComboField("Role:", LABELS_LEFT, LABELS_TOP + 80, LABELS_WIDTH, 16, userValues);
+		userField = createUserField("Role:", LABELS_LEFT, LABELS_TOP + 80, LABELS_WIDTH, 16, true);
+		passwordField = createPasswordField("Password:", LABELS_LEFT, LABELS_TOP + 120, LABELS_WIDTH, 16, true);	
+		//userField = createComboField("Role:", LABELS_LEFT, LABELS_TOP + 80, LABELS_WIDTH, 16, userValues);
 		passwordField = createPasswordField("Password:", LABELS_LEFT, LABELS_TOP + 120, LABELS_WIDTH, 16, true);
 		add(LoginButton.getInstance(LABELS_LEFT + LABELS_WIDTH+10, LABELS_TOP + 160));	
 			

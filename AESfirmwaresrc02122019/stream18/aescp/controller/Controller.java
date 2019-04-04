@@ -83,10 +83,10 @@ public class Controller {
 						System.out.println("Previous thread still on execution. But if will continue in a new Thread.");
 						 
 						}
-						if(theTestPhaser == null) {	
+						
 					 	  theTestPhaser = new TestPhaser(theTestPhaseVar);	
 					 	  theTestPhaser.startNewTest(theTestMode.getTestMode());
-						}
+						
 				}
 			}
 			
@@ -110,6 +110,7 @@ if (theTestPhaseVar.getPhase() != Phase.RESULTS && theTestPhaseVar.getPhase() !=
 
 						theTestPhaser.setStopCase(true);
 						System.out.println("Test stop requested!");
+						theTestStatus.setStatus(Status.READY);	
 						//theTestPhaser.interrupt();
 
 						}
@@ -130,6 +131,7 @@ if (theTestPhaseVar.getPhase() == Phase.RESULTS) {
 						
 						System.out.println("Test stop requested!");
 						ADCDriver.sendData(bleedValves);
+						theTestStatus.setStatus(Status.READY);	
 }
 				}
 			}

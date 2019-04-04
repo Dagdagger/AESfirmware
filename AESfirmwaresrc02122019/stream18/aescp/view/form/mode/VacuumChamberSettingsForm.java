@@ -244,8 +244,8 @@ public class VacuumChamberSettingsForm extends SettingsForm {
     		 		pressureDropMinPercentageTF.setText(CalculateDropPercentage(pressureDropMinTF.getText(),pressureTF.getText()));
     		 		pressureDropMaxPercentageTF.setText(CalculateDropPercentage(pressureDropMaxTF.getText(),pressureTF.getText()));
     		 		 
-    		 	//	pressureDropMinTF.setText(CalculateNegativeDrop(toleranceTF.getText(), pressureTF.getText()));
-    		 	//	pressureDropMaxTF.setText(CalculatePositiveDrop(toleranceTF.getText(), pressureTF.getText()));
+    		 		pressureDropMinTF.setText(CalculateNegativeDrop(pressureDropMinPercentageTF.getText(), pressureTF.getText()));
+    		 	    pressureDropMaxTF.setText(CalculatePositiveDrop(pressureDropMaxPercentageTF.getText(), pressureTF.getText()));
 
     		 		updateTestTimers();
     		 		
