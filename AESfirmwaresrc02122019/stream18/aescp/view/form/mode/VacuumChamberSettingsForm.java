@@ -39,7 +39,7 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 	private static JTextField pressureDropMinTF;
 	private static JTextField pressureDropMinPercentageTF;
 	private static JTextField pressureDropMaxTF;
-	private JTextField pressureDropMaxPercentageTF;
+	private static JTextField pressureDropMaxPercentageTF;
 	private static JTextField clampTimerTF;
 	private static JTextField programNumber;
 	private static JTextField bleedTimerTF;
@@ -103,11 +103,11 @@ public class VacuumChamberSettingsForm extends SettingsForm {
     	x = X_LEFT;
     	y += 30;    	
     	pressureDropMinTF = createTextFieldWithUnits("Min Drop: ", x, y, 150, 10, true, "mBar");
-    	//if ( lastVars == null) {
+    	if ( lastVars == null) {
         	  pressureDropMinTF.setText("0.0");
-        //	} else {
-       // 		pressureDropMinTF.setText(dif.format(lastVars.getminPressureDrop()));
-      //  	}
+        	} else {
+        		pressureDropMinTF.setText(dif.format(lastVars.getminPressureDrop()));
+        	}
     	
     	
     	
@@ -117,18 +117,25 @@ public class VacuumChamberSettingsForm extends SettingsForm {
     	
     	x = 260;    	
     	pressureDropMinPercentageTF = createTextFieldWithUnits("Min Drop: ", x, y, x, 6, true, "%");
-    	pressureDropMinPercentageTF.setText("0.0");
+    	if ( lastVars == null) {
+      	  pressureDropMinPercentageTF.setText("0.0");
+      	} else {
+      		pressureDropMinPercentageTF.setText(dif.format(lastVars.getminDropPercentage()));
+      	}
+    	
+    	
+    	
     	x = X_LEFT;
     	
     	
     	
     	y += 30;
     	pressureDropMaxTF = createTextFieldWithUnits("Max Drop: ", x, y, 150, 10, true, "mBar");
-    //	if ( lastVars == null) {
+    	if ( lastVars == null) {
       	  pressureDropMaxTF.setText("0.0");
-  //    	} else {
-      	//	pressureDropMaxTF.setText(dif.format(lastVars.getmaxPressureDrop()));
-     // 	}
+      	} else {
+      		pressureDropMaxTF.setText(dif.format(lastVars.getmaxPressureDrop()));
+      	}
     	
     	
     	
@@ -136,7 +143,16 @@ public class VacuumChamberSettingsForm extends SettingsForm {
     	
     	x = 260;    	
     	pressureDropMaxPercentageTF = createTextFieldWithUnits("Max Drop: ", x, y, x, 6, true, "%");
-    	pressureDropMaxPercentageTF.setText("0");   
+    	if ( lastVars == null) {
+        	  pressureDropMaxPercentageTF.setText("0.0");
+        	} else {
+        		pressureDropMaxPercentageTF.setText(dif.format(lastVars.getMaxDropPercentage()));
+        	}
+      	
+    	
+    	
+    	
+    	
     	x = X_LEFT;
     	y += 30;    	
     	
@@ -244,8 +260,8 @@ public class VacuumChamberSettingsForm extends SettingsForm {
     		 		pressureDropMinPercentageTF.setText(CalculateDropPercentage(pressureDropMinTF.getText(),pressureTF.getText()));
     		 		pressureDropMaxPercentageTF.setText(CalculateDropPercentage(pressureDropMaxTF.getText(),pressureTF.getText()));
     		 		 
-    		 		pressureDropMinTF.setText(CalculateNegativeDrop(pressureDropMinPercentageTF.getText(), pressureTF.getText()));
-    		 	    pressureDropMaxTF.setText(CalculatePositiveDrop(pressureDropMaxPercentageTF.getText(), pressureTF.getText()));
+    		 	//	pressureDropMinTF.setText(CalculateNegativeDrop(toleranceTF.getText(), pressureTF.getText()));
+    		 	//	pressureDropMaxTF.setText(CalculatePositiveDrop(toleranceTF.getText(), pressureTF.getText()));
 
     		 		updateTestTimers();
     		 		
@@ -279,6 +295,11 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 		System.out.println("hi");
 		
 		chargeTimeTF.setText(Double.toString(lastVars.getChargevar()));
+		pressureDropMinTF.setText(Double.toString(lastVars.getminPressureDrop()));
+		pressureDropMinPercentageTF.setText(Double.toString(lastVars.getminDropPercentage()));
+		pressureDropMaxTF.setText(Double.toString(lastVars.getmaxPressureDrop()));
+		pressureDropMaxPercentageTF.setText(Double.toString(lastVars.getMaxDropPercentage()));
+		
 		testTimeTF.setText(Double.toString(lastVars.getTestvar()));
 		settleTimeTF.setText(Double.toString(lastVars.getSettlevar()));
 		toleranceTF.setText(Double.toString(lastVars.getpressureToleranceVar()));
@@ -319,6 +340,7 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 		TestVars.setSliderTime(Double.valueOf(sliderTimerTF.getText()));
 		TestVars.setProgramNumber(Double.valueOf(TopForm.progNumber.getText()));
 		TestVars.setminDropPercentage(Double.valueOf(pressureDropMinPercentageTF.getText()));
+		TestVars.setmaxDropPercentage(Double.valueOf(pressureDropMaxPercentageTF.getText()));
 		TestVars.setminPressureDrop(Double.valueOf(pressureDropMinTF.getText()));
 		TestVars.setmaxPressureDrop(Double.valueOf(pressureDropMaxTF.getText()));
 		
@@ -337,6 +359,8 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 	    e.setDecay(Double.valueOf(testDecay.getText()));	
 	    e.setminPressureDrop(Double.valueOf(pressureDropMinTF.getText()));
 		e.setmaxPressureDrop(Double.valueOf(pressureDropMaxTF.getText()));
+		e.setminDropPercentage(Double.valueOf(pressureDropMinPercentageTF.getText()));
+		e.setmaxDropPercentage(Double.valueOf(pressureDropMaxPercentageTF.getText()));
 		
 		 try {
 	         FileOutputStream fileOut =
@@ -360,7 +384,7 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 		double minpercentage;	 		
 	   	double convertedtofloatdrop = Double.parseDouble(pstr);
 	   	double convertedtofloatpres = Double.parseDouble(specifiedPre);  	
-		minpercentage = (double) ((convertedtofloatdrop*100)/convertedtofloatpres);
+		minpercentage = 100-(double) ((convertedtofloatdrop*100)/convertedtofloatpres);
 		String result = dif.format(minpercentage);
 		return result;
 	}
@@ -369,7 +393,7 @@ public static String CalculateNegativeDrop(String pstr, String specifiedPre) {
 		double droppedPressure;	 		
 		double convertedtofloatdrop = Double.parseDouble(pstr);
 		double convertedtofloatpres = Double.parseDouble(specifiedPre); 	
-		droppedPressure = (convertedtofloatpres - ((convertedtofloatdrop*0.01)*convertedtofloatpres));
+		droppedPressure = 100 -(convertedtofloatpres - ((convertedtofloatdrop*0.01)*convertedtofloatpres));
 		String result = dif.format(droppedPressure);
 		return result;			 
 		}
@@ -378,7 +402,7 @@ public static String CalculatePositiveDrop(String pstr, String specifiedPre) {
 	double droppedPressure;	 		
 	double convertedtofloatdrop = Double.parseDouble(pstr);
 	double convertedtofloatpres = Double.parseDouble(specifiedPre); 	
-	droppedPressure = (convertedtofloatpres + ((convertedtofloatdrop*0.01)*convertedtofloatpres));
+	droppedPressure = 100 -(convertedtofloatpres + ((convertedtofloatdrop*0.01)*convertedtofloatpres));
 	String result = dif.format(droppedPressure);
 	return result;			 
 	}
@@ -388,7 +412,7 @@ public static String CalculatedDrop(String pstr, String specifiedPre) {
 	double minpercentage;	 		
 	double convertedtofloatdrop = Double.parseDouble(pstr);
 	double convertedtofloatpres = Double.parseDouble(specifiedPre); 	
-	minpercentage = (double) ((convertedtofloatdrop*convertedtofloatpres)/100);
+	minpercentage = 100 -(double) ((convertedtofloatdrop*convertedtofloatpres)/100);
 	String result = dif.format(minpercentage);
 	return result;			 
 	}

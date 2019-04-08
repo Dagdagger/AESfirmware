@@ -17,8 +17,8 @@ public class ADCDriver {
 		
 		// Create a sockets client that will read on port 3000 of localhost	
 		try {
-//Socket s = new Socket("localhost", 3000);
-Socket s = new Socket("192.168.43.178", 3000);
+Socket s = new Socket("localhost", 3000);
+//Socket s = new Socket("192.168.43.178", 3000);
 	        BufferedReader input = new BufferedReader(new InputStreamReader(s.getInputStream()));
 	        String response = input.readLine();
 	        s.close();
@@ -72,8 +72,8 @@ Socket s = new Socket("192.168.43.178", 3000);
  
 			try {
 				
-				Socket s = new Socket("192.168.43.178", 90);
-				//Socket s = new Socket("localhost", 90);
+			//	Socket s = new Socket("192.168.43.178", 90);
+			Socket s = new Socket("localhost", 90);
 				String message = (hex);
 				
 				byte[] hello = message.getBytes();

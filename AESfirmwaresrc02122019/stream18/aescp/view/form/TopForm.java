@@ -99,12 +99,12 @@ public class TopForm extends Form {
     	 gaugePressure = createStatusText("15.000", 538, 10, 80);
       	 
     	
-    	gaugelbl= createStatusText("Unit:", 622, 1, 56);
+    	gaugelbl= createStatusText("Unit:", 622, 1, 50);
     	gaugelbl.setBackground(new Color(0xeeeeee));
     	gaugelbl.setBorder(border);
     	gaugelbl.setFont(font);
     	
-		gaugeUnit = createStatusText("mBAR", 680, 10, 50);
+		gaugeUnit = createStatusText("mBAR", 670, 10, 80);
 		
 		
 		

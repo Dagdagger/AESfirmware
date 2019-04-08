@@ -105,33 +105,43 @@ public class Controller {
 						// the status label in the status form
 						theTestStatus.setStatus(Status.SELECT);	
 						
-if (theTestPhaseVar.getPhase() != Phase.RESULTS && theTestPhaseVar.getPhase() != Phase.H_BACK && theTestPhaseVar.getPhase() != Phase.FAIL && theTestPhaseVar.getPhase() != Phase.V_BACK) {
+if (theTestPhaseVar.getPhase() != Phase.RESULTS && theTestPhaseVar.getPhase() != Phase.H_BACK && theTestPhaseVar.getPhase() != Phase.FAIL && theTestPhaseVar.getPhase() != Phase.V_BACK && theTestPhaseVar.getPhase() != Phase.H_FWD) {
 	theTestPhaser.interrupt();
 
 						theTestPhaser.setStopCase(true);
 						System.out.println("Test stop requested!");
-						theTestStatus.setStatus(Status.READY);	
+						theTestStatus.setStatus(Status.SELECT);	
 						//theTestPhaser.interrupt();
 
 						}
 if (theTestPhaseVar.getPhase() == Phase.RESULTS) {
 	
-	theTestStatus.setStatus(Status.READY);	
+	theTestStatus.setStatus(Status.READY);
 	theTestPhaseVar.setPhase(Phase.FINISHED);
+}
+	
+	if (theTestPhaseVar.getPhase() == Phase.H_FWD) {
+		ResultsForm results = theTestPhaser.getResultsForm();
+		results.setResultFieldStopping(true);
+		ADCDriver.sendData(cleanValves);
+		theTestPhaser.setRetreatCase(true);
+		
+		
 	
 }else {
 
+						
 						// TODO: Stop the test
 						//ADCDriver.sendData(bleedValves);
 						//theTestPhaser.setPhaseVar(Phase.FAIL);
 						ResultsForm results = theTestPhaser.getResultsForm();
-						results.setResultFieldWait(true);
+						results.setResultFieldStopping(true);
 						theTestPhaser.interrupt();
 
 						
 						System.out.println("Test stop requested!");
 						ADCDriver.sendData(bleedValves);
-						theTestStatus.setStatus(Status.READY);	
+						theTestStatus.setStatus(Status.SELECT);	
 }
 				}
 			}

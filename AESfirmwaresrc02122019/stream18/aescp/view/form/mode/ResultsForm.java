@@ -34,6 +34,8 @@ public abstract class ResultsForm extends Form {
 	public BigLabel resultFieldFail;
 	public BigLabel resultFieldWait;
 	public BigLabel resultFieldTesting;
+	public BigLabel resultFieldStopping;
+	public static int cycles;
 	protected JCheckBox resulbtn;
 	protected StartButton bt;
 	private JTextField resultlbl;
@@ -55,20 +57,20 @@ public abstract class ResultsForm extends Form {
 		y = 10;
 	 
 
-    	testField = createTextField("Test:", x, y, 160, 8, false);		 
+    	testField = createTextField("Cycles", x, y, 160, 8, false);		 
     	testField.setText("");
     	testField.setEditable(false);
     	
     	resultValueField = createTextFieldWithUnits(getResultValueText(), x, y + 50, 160, 10, false, getResultValueUnits());
-    	resultValueField.setText("0.0000");
+    	resultValueField.setText("Waiting for Results");
     	resultValueField.setEditable(false);
     	
     	
     	dateField = createTextField("Date:", x , y+100, 100, 20, false);
-    	dateField.setText(java.time.LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+    	dateField.setText(java.time.LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
     	dateField.setEditable(false);
      	   	
-    	resultlbl = createTextField("Result:", x+40, y+150, 80, 18, false); 
+    	resultlbl = createTextField("Status:", x+40, y+150, 80, 18, false); 
     	resultlbl.setEditable(false);
     	resultlbl.setBackground(new Color(0xeeeeee));
     	resultlbl.setBorder(border);
@@ -93,6 +95,9 @@ public abstract class ResultsForm extends Form {
     	resultFieldTesting.setVisible(false);
     	add(resultFieldTesting);
     	
+    	resultFieldStopping = new BigLabel("Stopping....", Color.ORANGE, x+70, 200, RF_WIDTH, RF_WIDTH / 3);
+    	resultFieldTesting.setVisible(false);
+    	add(resultFieldStopping);
     	
     	
     	
@@ -104,15 +109,26 @@ public abstract class ResultsForm extends Form {
   	StartButton.getInstance().setDisabled(true);
 	}
 	
+	public void updateResultFieldCycles() {
+		cycles++;
+		testField.setText(Integer.toString(cycles));
+	}
+	
+	public void setCyclesto0() {
+		testField.setText("0");
+	}
+	
 	public void setResultFieldTesting(boolean visibility){
 		resultFieldWait.setVisible(false);
 		resultFieldPass.setVisible(false);
 		resultFieldFail.setVisible(false);
+		resultFieldStopping.setVisible(false);
 		resultFieldTesting.setVisible(visibility);
 
 	}
 	public void setResultFieldPass(boolean visibility) throws InterruptedException {
 		resultFieldTesting.setVisible(false);
+		resultFieldStopping.setVisible(false);
 		resultFieldPass.setVisible(visibility);
 		resultFieldWait.setVisible(false);
 		TimeUnit.SECONDS.sleep(10);
@@ -124,8 +140,18 @@ public abstract class ResultsForm extends Form {
 		resultValueField.setText(message);
      }
 	
+	public void setResultFieldStopping(boolean visibility) {
+		resultFieldTesting.setVisible(false);
+		resultFieldPass.setVisible(false);
+		resultFieldFail.setVisible(false);
+		resultFieldWait.setVisible(false);
+		resultFieldStopping.setVisible(visibility);
+		
+	}
+	
 	public void setResultFieldWait(boolean visibility) {
 		resultFieldTesting.setVisible(false);
+		resultFieldStopping.setVisible(false);
 		resultFieldPass.setVisible(false);
 		resultFieldFail.setVisible(false);
 		resultFieldWait.setVisible(visibility);
@@ -137,6 +163,7 @@ public abstract class ResultsForm extends Form {
 	
 	public void setResultFieldFail(boolean visibility, String message) throws InterruptedException {
 		resultFieldTesting.setVisible(false);
+		resultFieldStopping.setVisible(false);
 		resultFieldFail.setVisible(visibility);
 		resultFieldFail.setText(message);
 		resultFieldWait.setVisible(false);

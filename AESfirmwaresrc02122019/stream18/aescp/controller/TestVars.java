@@ -195,6 +195,18 @@ public static double getTemperatureVar() {
 		TestVars.maxPressureDrop = maxPressureDrop;
 		
 	}
+	
+	public static double getminPressureDrop() {
+		return minPressureDrop;
+	}
+
+
+	public static double getmaxPressureDrop() {
+		
+		return maxPressureDrop;
+	}
+
+
 
  
 

@@ -21,6 +21,7 @@ import stream18.aescp.model.ADCValuesBuffer;
 import stream18.aescp.model.PhaseCfg;
 import stream18.aescp.model.TestModeCfg;
 import stream18.aescp.model.TestModeCfgManager;
+import stream18.aescp.view.button.StartButton;
 import stream18.aescp.view.button.StopButton;
 import stream18.aescp.view.form.Form;
 import stream18.aescp.view.form.StatusForm;
@@ -46,7 +47,10 @@ public class TestPhaser extends Thread {
 	boolean filled = false;
 	boolean fail = false;
 	boolean stopCase = false;
+	boolean retreatCase = false; // case for stopping before slider goes in
 	int jumps = 0;
+	int numberOfReadings;
+	double 	filltoSettle;
 	double [] valuesRead;
 	int valueOfJump = 0;
 	double lastValue;
@@ -69,9 +73,13 @@ public class TestPhaser extends Thread {
 	 
 	}
 	
-	public void setStopCase(boolean setting) {
+public void setStopCase(boolean setting) {
 		this.stopCase= setting;
 	}
+public void setRetreatCase(boolean setting) {
+	this.retreatCase= setting;
+}
+
 	
 	public void resetTimers () {
 		TestModeCfgManager.setTimers();
@@ -97,7 +105,6 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 	}
 	    
 		public void run() {
-			//while(!Thread.interrupted()) {
 			theresultsform.setResultFieldTesting(true);
 			PhaseCfg phaseCfg;
 			long phaseStartTime;
@@ -105,7 +112,7 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 			// Cleans the buffer, just setting the length to 0
 			ADCValuesBuffer.reset();
 			
-			
+			//while(!Thread.interrupted()) {	
 			while(phaseVar.getPhase() != Phase.FINISHED) {
 				// Obtain the config for this phase		
 				
@@ -119,7 +126,7 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 				 	break;
 				 	 		
 				}
-	
+			
 	 
 		
 				// Finally start a new Execution thread for this Test
@@ -139,8 +146,17 @@ phaseCfgTime = phaseCfg.getPhaseTime();
 			/*	if( phaseVar.getPhase() == Phase.FAIL) {
 					pass = false;
 				}*/
-				phaseCfgTime = 1000*setTimer();
 				
+				if( phaseVar.getPhase() == Phase.STOPPED) {
+					theresultsform.setResultFieldStopping(true);
+				}
+				
+				
+				if (phaseVar.getPhase() == Phase.H_FWD) {
+					//TestVars.startTime = System.currentTimeMillis();
+				}
+				phaseCfgTime = 1000*setTimer();
+				numberOfReadings = 0;
 				if (phaseCfgTime == -1000) {
 					phaseCfgTime = phaseCfg.getPhaseTime();
 				}
@@ -152,7 +168,7 @@ phaseCfgTime = phaseCfg.getPhaseTime();
 				long timer = (long)phaseCfgTime;
 				double firstValue = 0;
 				int i = 2;
-				int samplesToFill = 10;
+				int samplesToFill = 4;
 				// Acquire data on enabled ADCs until the time required has elapsed
 				phaseStartTime = System.currentTimeMillis();
 				while ((System.currentTimeMillis() - phaseStartTime) < phaseCfgTime) {
@@ -180,6 +196,7 @@ phaseCfgTime = phaseCfg.getPhaseTime();
 						}
 						
 						num.add(adcValues[3]);
+						numberOfReadings++;
 						/* If the pressure for filling is not met enough times during the fill sequence reject the pressure */
 						
 						if (phaseVar.getPhase() == Phase.FILL) {
@@ -191,7 +208,7 @@ phaseCfgTime = phaseCfg.getPhaseTime();
 							
 							
 							
-							
+						/* this line does need to be changed to the ArrayList */	
 							if ((adcValues[3]  > (pressure - (TestVars.getpressureToleranceVar()*pressure))) && (adcValues[3]  < (pressure + (TestVars.getpressureToleranceVar()*pressure)))) {
 								System.out.println("Reached once");
 								samplesToFill--;
@@ -211,18 +228,33 @@ phaseCfgTime = phaseCfg.getPhaseTime();
 						storeAdcValues(adcValues);
 						TopForm.getInstance(null).setPressure(Double.toString(adcValues[3]));	
 						// Wait until at least 100 millisecond have elapsed
-						while (System.currentTimeMillis() - adcStartTime < 100);
+						while (System.currentTimeMillis() - adcStartTime < 100) {};
 					} /*else {
 						sleep(timer); // Wait 1 us, in case there is nothing else to do	
 					 
 					}*/
 				}
+			
+				
+				/*maybe write a while loop here */
+			if(num.size() > 2) {	
+				if (num.get(num.size()-1) != 0) {
+					/* If the reading acquired during the last fill of phase,
+					 * is equal to zero discard the reading.
+					 */
+				   filltoSettle = num.get(num.size()-1);	
+				}
+			}
+					
+				
+				/* this line gets the Pressure set in the TestVars */
 				double pressure =  TestVars.getpressureVar();
 				if (phaseCfg.anyAdcEnabled()) {
 				System.out.println("Delta P: " + (firstValue - adcValues[3]));
 				}
 				 if (phaseVar.getPhase() == Phase.SETTLE) {
 						
+					 /*
 						if ((firstValue - adcValues[3]) > 40) {
 								//phaseVar.setPhase(Phase.FAIL);
 								phaseCfg = theTestModeCfg.getPhaseCfg(phaseVar.getPhase());
@@ -241,27 +273,71 @@ phaseCfgTime = phaseCfg.getPhaseTime();
 						}
 						
 					}
+					  	*/
+					 
+					 if(adcValues[3] < TestVars.getmaxPressureDrop() ) {
+						 
+						 System.out.println("FAILED DURING SETTLE");
+							pass = false;
+							String temp = df.format(adcValues[3]);
+							errorMessage = "GROSS LEAK";
+							theresultsform.setResult("FAIL GROSS LEAK " + temp);
+						 
+					 }
+					 
+					/* else if(adcValues[3] > TestVars.getminPressureDrop()) {
+						 System.out.println("FAILED DURING SETTLE");
+							pass = false;
+							String temp = df.format(adcValues[3]);
+							errorMessage = "NOT ENOUGH DROP";
+							theresultsform.setResult("Failure " + temp);
+						 
+					 } */
+						
+						else {
+						pass = true;
+						//theresultsform.setResultFieldWait(false);
+                     //theresultsform.setResult(Double.toString(adcValues[3]) + TopForm.getUnits());
+						theresultsform.setResult("Delta P" + Double.toString((firstValue - adcValues[3]))+ " " + TopForm.getUnits());
+						theresultsform.setResult("Passed Settle Phase");
+
+						}
+					 
+					 
+				 }
 				
 				
 				if (phaseVar.getPhase() == Phase.FILL) {
 					
+					for (Iterator<Double> iterator = num.iterator(); iterator.hasNext();) {
+					    Double number = iterator.next();
+					    if (number  == 0.0) {
+					       // System.out.println("This is Even Number: " + number);
+					        iterator.remove();
+					    }
+					}
+
+					
+					int SizetoRead = numberOfReadings/3;
 					double averageOfLastValues = 0;
-					if(!(num.size()  > 10)) {
-					int index = num.size()-10;
+					if(!(num.size()  > SizetoRead)) {
+					int index = num.size()-SizetoRead;
 					double avgTotal = 0; 
 					//averageOfLastValues;
 					
 					for (int j = index; j< num.size(); j++) {
+						if ( !(j < 0)) {
 						avgTotal= num.get(j) + avgTotal;
+						}
 						
 					}
 					
 					
 					
-					averageOfLastValues = avgTotal/10;
+					averageOfLastValues = avgTotal/SizetoRead;
 					}
 					
-					if (!filled && (averageOfLastValues < (pressure - (TestVars.getpressureToleranceVar()*pressure)))) {
+					if (!filled && (averageOfLastValues < (pressure - (TestVars.getminDropPercentage()*pressure)))) {
 							//phaseVar.setPhase(Phase.FAIL);
 							phaseCfg = theTestModeCfg.getPhaseCfg(phaseVar.getPhase());
 							System.out.println("FAILED DURING FILL DIDNT REACH PRESSURE");
@@ -271,10 +347,10 @@ phaseCfgTime = phaseCfg.getPhaseTime();
 							errorMessage = "LOW FILL";
 							theresultsform.setResult("LOW FILL " + temp);
 					}
-					else if (!filled && (adcValues[3]  > (pressure + (TestVars.getpressureToleranceVar()*pressure)))) {
+					else if (!filled && (averageOfLastValues  > (pressure - (TestVars.getmaxDropPercentage()*pressure)))) {
 						//phaseVar.setPhase(Phase.FAIL);
 						phaseCfg = theTestModeCfg.getPhaseCfg(phaseVar.getPhase());
-						System.out.println("FAILED DURING FILL DIDNT REACH PRESSURE");
+						System.out.println("FAILED DURING FILL WENT ABOVE PRESSURE");
 						pass = false;
 						String temp = df.format(adcValues[3]);
 						errorMessage = "HIGH FILL";
@@ -284,11 +360,12 @@ phaseCfgTime = phaseCfg.getPhaseTime();
 					else {
 					pass = true;
 					//theresultsform.setResultFieldWait(false);
-					theresultsform.setResult(Double.toString(adcValues[3]) + TopForm.getUnits());
+					theresultsform.setResult("Passed Fill Phase");
 					//theresultsform.setResult("Delta P" + Double.toString((firstValue - adcValues[3]))+ " " + TopForm.getUnits());
 					}
 					
 				}
+				
 				System.out.println(TestVars.getTestDecayvar());
 			if (phaseVar.getPhase() == Phase.TEST) {
 				
@@ -297,14 +374,14 @@ phaseCfgTime = phaseCfg.getPhaseTime();
 				for (Iterator<Double> iterator = num.iterator(); iterator.hasNext();) {
 				    Double number = iterator.next();
 				    if (number  == 0.0) {
-				        System.out.println("This is Even Number: " + number);
 				        iterator.remove();
 				    }
 
 				}
-				
-				
+					
 					double ddecay = 0.0;
+					ddecay = num.get(0) - num.get(num.size() - 1);
+				
 					if(firstValue -adcValues[3] < 0) {
 						ddecay = -1*(firstValue -adcValues[3]);
 						System.out.println(ddecay);
@@ -325,18 +402,26 @@ phaseCfgTime = phaseCfg.getPhaseTime();
 						pass = true;
 					//theresultsform.setResultFieldWait(false);
 					//theresultsform.setResult(Double.toString(adcValues[3]) + TopForm.getUnits());
-					theresultsform.setResult("Delta P" + Double.toString((firstValue - adcValues[3]))+ " " + TopForm.getUnits());
+					String temp = df.format(ddecay);
+					theresultsform.setResultFieldDecay(temp);
 					}
 					
 				}
+			
+			
 				if (phaseVar.getPhase() == Phase.RESULTS) {
 					if(!fail) {
 						System.out.print("PASSED TEST");
 						boolean turnGreenLightOn[] = {false, false, false, false, false,true, false, false, false, false};
 						boolean off[] = {false, false, false, false, false,false, false, false, false, false};
 					//	theresultsform.setResult(Double.toString(adcValues[3]) + TopForm.getUnits());
-						theresultsform.setResultFieldDecay(Double.toString(totalDecay));
-						theresultsform.setResult(Double.toString(totalDecay)+ " " + TopForm.getUnits());
+						
+						if(totalDecay < 0) {
+							totalDecay = -1*(firstValue -adcValues[3]);
+							System.out.println(totalDecay);
+						}
+						theresultsform.setResultFieldDecay(df.format(totalDecay));
+						theresultsform.setResult(df.format(totalDecay)+ " " + TopForm.getUnits());
 						ADCDriver.sendData(turnGreenLightOn);
 						theresultsform.setResultFieldPass(true);
 						ADCDriver.sendData(off);
@@ -354,16 +439,23 @@ phaseCfgTime = phaseCfg.getPhaseTime();
 					pass = true;
 				}
 				
-				
+				num.clear();
 				 if (stopCase) {
 					phaseVar.setPhase(Phase.STOPPED);
+					StartButton.getInstance().setDisabled(true);	
 					stopCase = false;
 				 }
+				 else if(retreatCase) {
+					 
+					 phaseVar.setPhase(Phase.FINISHED);
+					 theresultsform.setResultFieldWait(true);
+					 retreatCase = false;
+				 }
 					
-				 else if (pass) {
+				 else if (pass || phaseVar.getPhase()!= Phase.STOPPED || phaseVar.getPhase() != Phase.STOP_BACK || phaseVar.getPhase() != Phase.STOP_HBACK)  {
 					phaseVar.setPhase(phaseCfg.getNextPhase());
 				}
-				 else {
+				 else if(!pass && phaseVar.getPhase()!= Phase.STOPPED && phaseVar.getPhase() != Phase.STOP_BACK && phaseVar.getPhase() != Phase.STOP_HBACK){
 					
 					phaseVar.setPhase(Phase.FAIL);
 					pass = true;
@@ -373,11 +465,12 @@ phaseCfgTime = phaseCfg.getPhaseTime();
 					e.printStackTrace();
 				}
 			}		
+			
 			// The test has finished, this thread just ends
 			
 			
 			
-
+			theresultsform.setResultFieldWait(true);
 	System.out.println("THREAD ENDS RUNNING");
 	for (int i=0; i<ADCValuesBuffer.getCount(); i++) {
 		System.out.println(ADCValuesBuffer.getVal(i, 0) + ", " + ADCValuesBuffer.getVal(i, 1));
@@ -404,10 +497,10 @@ phaseCfgTime = phaseCfg.getPhaseTime();
 			ShowLogsScreen2.addDataLine();
 			
 		//interrupt();
-			//}
+			}
+			
 			
 
-}
 
 		
 		

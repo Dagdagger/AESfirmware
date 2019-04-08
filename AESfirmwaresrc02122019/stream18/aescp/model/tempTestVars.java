@@ -25,6 +25,8 @@ public class tempTestVars implements Serializable {
 	double  testDecayvar;
 	private Double minPressureDrop;
 	private Double maxPressureDrop;
+	private Double maxDropPercentage;
+	private Double minDropPercentage;
 	
 	
 	
@@ -191,6 +193,29 @@ public double getTemperatureVar() {
 		
 	
 		
+	}
+
+	public void setminDropPercentage(Double minDropPercentage) {
+		this.minDropPercentage = minDropPercentage;
+		
+	}
+	
+	
+	public void setmaxDropPercentage(Double maxDropPercentage) {
+		this.maxDropPercentage = maxDropPercentage;
+		
+	}
+	
+
+	public double getminDropPercentage() {
+		return this.minDropPercentage;
+		
+	}
+	
+	
+	public double getMaxDropPercentage() {
+		
+		return this.maxDropPercentage;
 	}
 
  
