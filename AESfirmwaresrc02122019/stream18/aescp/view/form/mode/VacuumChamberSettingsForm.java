@@ -20,6 +20,7 @@ import javax.swing.border.Border;
 
 import stream18.aescp.Browser;
 import stream18.aescp.controller.TestVars;
+import stream18.aescp.model.DBConnection;
 import stream18.aescp.model.Program;
 import stream18.aescp.model.tempTestVars;
 import stream18.aescp.view.button.DownProgramButton;
@@ -46,9 +47,13 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 	private static JTextField sliderTimerTF;
 	private static JTextField chargeTimeTF;
 	private static JTextField settleTimeTF;
+	private static JTextField cyclesTF;
 	private static JTextField testTimeTF;
+	private static JTextField nameTF;
 	private static JTextField testDecayMin;
+	boolean gotLastProgram;
 	private static JTextField testDecay;
+	private static JTextField cycles;
 	protected static final int X_LEFT = 10;
 	protected static final int Y_TOP = 10; 
 	private static TestVars theTestVars;
@@ -64,12 +69,14 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 		
 		
 		try {
-		    FileInputStream fileIn = new FileInputStream("/tmp/program"+TopForm.progNumber.getText());
+		    FileInputStream fileIn = new FileInputStream("/home/pi/jserial/program"+TopForm.progNumber.getText());
 		    ObjectInputStream in = new ObjectInputStream(fileIn);
 		    lastVars = (tempTestVars) in.readObject();
 		    in.close();
 		    fileIn.close();
 		   } catch (Exception e) {
+			   lastVars = null;
+			   gotLastProgram = true;
 		    System.err.println("\nError creating chamber settings Object. None exists?\n"
 		      + e.getMessage() + e.getClass());
 		   }
@@ -144,6 +151,7 @@ public class VacuumChamberSettingsForm extends SettingsForm {
     	x = 260;    	
     	pressureDropMaxPercentageTF = createTextFieldWithUnits("Max Drop: ", x, y, x, 6, true, "%");
     	if ( lastVars == null) {
+    		
         	  pressureDropMaxPercentageTF.setText("0.0");
         	} else {
         		pressureDropMaxPercentageTF.setText(dif.format(lastVars.getMaxDropPercentage()));
@@ -162,10 +170,25 @@ public class VacuumChamberSettingsForm extends SettingsForm {
         	  chargeTimeTF.setText("0.0");
         	} else {
         		chargeTimeTF.setText(Double.toString(lastVars.getChargevar()));
-        	}
-    	
-    	
-    	
+        	       }
+        		
+		x = 260;    	
+		cyclesTF = createTextFieldWithUnits("Cycle: ", x, y, x, 6, true, "Times" );
+		if ( lastVars == null) {
+			  cyclesTF.setText("0");
+			} else {
+					cyclesTF.setText(Integer.toString(lastVars.getCycles()));
+			}
+		
+		nameTF = createTextFieldWithUnits("ProgName: ", x, y+30, x, 6, true, "");
+		if ( lastVars == null) {
+			  nameTF.setText("NA");
+			} else {
+					nameTF.setText((lastVars.getprogramName()));
+			}
+		
+		
+
     	x = X_LEFT;
     	y += 30;	
 
@@ -227,7 +250,7 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 		if ( lastVars == null) {
 	      	  sliderTimerTF.setText("0.0");
 	      	} else {
-	      		sliderTimerTF.setText(Double.toString(lastVars.getClampTime()));
+	      		sliderTimerTF.setText(Double.toString(lastVars.getSliderTime()));
 	      	}
 		y += 30;
     	
@@ -243,7 +266,7 @@ public class VacuumChamberSettingsForm extends SettingsForm {
  *
  ***********************************************************************************************************************/
     	x = 260;
-    	SaveParmsButton saveBTN = new SaveParmsButton(350 + 100, 150);
+    	SaveParmsButton saveBTN = new SaveParmsButton(350 + 100, 200);
     	add(saveBTN);
     	
     	//TestVars.setChargevar(Integer.parseInt(chargeTimeTF.getText()));
@@ -283,7 +306,7 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 	
 	public static void reLoad(tempTestVars lastVars) {
 	/*	try {
-		    FileInputStream fileIn = new FileInputStream("/tmp/program"+TopForm.progNumber.getText());
+		    FileInputStream fileIn = new FileInputStream("/home/pi/jserial/program"+TopForm.progNumber.getText());
 		    ObjectInputStream in = new ObjectInputStream(fileIn);
 		    lastVars = (tempTestVars) in.readObject();
 		    in.close();
@@ -299,7 +322,7 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 		pressureDropMinPercentageTF.setText(Double.toString(lastVars.getminDropPercentage()));
 		pressureDropMaxTF.setText(Double.toString(lastVars.getmaxPressureDrop()));
 		pressureDropMaxPercentageTF.setText(Double.toString(lastVars.getMaxDropPercentage()));
-		
+		pressureDropMaxPercentageTF.setText(Integer.toString(lastVars.getCycles()));
 		testTimeTF.setText(Double.toString(lastVars.getTestvar()));
 		settleTimeTF.setText(Double.toString(lastVars.getSettlevar()));
 		toleranceTF.setText(Double.toString(lastVars.getpressureToleranceVar()));
@@ -309,6 +332,8 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 		sliderTimerTF.setText(Double.toString(lastVars.getSliderTime()));
 		testDecay.setText(Double.toString(lastVars.getTestDecayvar()));
 		pressureTF.setText(Double.toString(lastVars.getpressureVar()));
+		cyclesTF.setText(Integer.toString(lastVars.getCycles()));
+		nameTF.setText(lastVars.getprogramName());
 		  
 		
 	}
@@ -343,10 +368,13 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 		TestVars.setmaxDropPercentage(Double.valueOf(pressureDropMaxPercentageTF.getText()));
 		TestVars.setminPressureDrop(Double.valueOf(pressureDropMinTF.getText()));
 		TestVars.setmaxPressureDrop(Double.valueOf(pressureDropMaxTF.getText()));
-		
-		
+		TestVars.setCycles(Integer.valueOf(cyclesTF.getText()));
+		ResultsForm theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);	
+		theresultsform.setInitialFieldCycles(Integer.valueOf(cyclesTF.getText()));
+		theresultsform.setInitialFieldPasses(Integer.valueOf(cyclesTF.getText()));	
 		tempTestVars e = new tempTestVars();
 		
+		e.setCycles(Integer.valueOf(cyclesTF.getText()));
 		e.setChargevar(Double.valueOf(chargeTimeTF.getText()));
 		e.setSettlevar(Double.valueOf(settleTimeTF.getText()));
 		e.setTestvar(Double.valueOf(testTimeTF.getText()));
@@ -355,22 +383,25 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 		e.setBleedTime(Double.valueOf(bleedTimerTF.getText()));
 		e.setClampTime(Double.valueOf(clampTimerTF.getText()));
 		e.setSliderTime(Double.valueOf(sliderTimerTF.getText()));
-		e.setProgramNumber(Double.valueOf(TopForm.progNumber.getText()));
+		e.setProgramNumber(Integer.valueOf(TopForm.progNumber.getText()));
 	    e.setDecay(Double.valueOf(testDecay.getText()));	
 	    e.setminPressureDrop(Double.valueOf(pressureDropMinTF.getText()));
 		e.setmaxPressureDrop(Double.valueOf(pressureDropMaxTF.getText()));
 		e.setminDropPercentage(Double.valueOf(pressureDropMinPercentageTF.getText()));
 		e.setmaxDropPercentage(Double.valueOf(pressureDropMaxPercentageTF.getText()));
+		e.setprogramName(nameTF.getText());
+		theresultsform.setName(e.getprogramName());
 		
+		DBConnection.insertAudiTrail("Settings for Prog "+ Integer.toString(e.getProgramNumber()), "Changed by" + TestVars.getTestUservar());
 		 try {
 	         FileOutputStream fileOut =
-	         new FileOutputStream("/tmp/program"+TopForm.progNumber.getText());
+	         new FileOutputStream("/home/pi/jserial/program"+TopForm.progNumber.getText());
 	         ObjectOutputStream out = new ObjectOutputStream(fileOut);
 	         
 	         out.writeObject(e);
 	         out.close();
 	         fileOut.close();
-	         System.out.printf("Serialized data is saved in /tmp/lastProgram.ser");
+	         System.out.printf("Serialized data is saved in /home/pi/jserial/program"+TopForm.progNumber.getText() + ".ser");
 	      } catch (IOException i) {
 	         i.printStackTrace();
 	      }

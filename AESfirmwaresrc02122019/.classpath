@@ -17,5 +17,6 @@
 	<classpathentry kind="lib" path="javacomponents/xchart-3.5.2/xchart-3.5.2/xchart-3.5.2.jar"/>
 	<classpathentry kind="lib" path="javacomponents/mysql-connector-java-8.0.15.jar"/>
 	<classpathentry kind="lib" path="/socketTester/mysql-connector-java-5.1.47.jar"/>
+	<classpathentry kind="lib" path="com.lowagie.text-2.1.7.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

@@ -12,16 +12,19 @@ public class tempTestVars implements Serializable {
 	double  pressureVar;
 	double  TemperatureVar;
 	double  pressureToleranceVar;
+	String  programName;
+	
 	
 	double bleedTime;
 	double sliderTime;
 	double clampTime; 
-	double programNumber;
+	int programNumber;
 	
 	String  testUservar;
 	String  testTimeStampvar;
 	String  testModevar;
 	int     testCountervar;
+	int		cycles;
 	double  testDecayvar;
 	private Double minPressureDrop;
 	private Double maxPressureDrop;
@@ -30,11 +33,11 @@ public class tempTestVars implements Serializable {
 	
 	
 	
-	public double getProgramNumber() {
+	public int getProgramNumber() {
 		return this.programNumber;
 	}
 	
-	public void setProgramNumber(Double double1) {
+	public void setProgramNumber(int double1) {
 		this.programNumber = double1;
 	}
 	public double getBleedTime() {
@@ -194,6 +197,15 @@ public double getTemperatureVar() {
 	
 		
 	}
+	
+	
+	public String getprogramName() {
+		return this.programName;	
+	}
+	
+	public void setprogramName(String programName) {
+		this.programName = programName;
+	}
 
 	public void setminDropPercentage(Double minDropPercentage) {
 		this.minDropPercentage = minDropPercentage;
@@ -216,6 +228,13 @@ public double getTemperatureVar() {
 	public double getMaxDropPercentage() {
 		
 		return this.maxDropPercentage;
+	}
+
+	public int getCycles() {
+		return this.cycles;
+	}
+	public void setCycles(int cycles) {
+		this.cycles = cycles;
 	}
 
  

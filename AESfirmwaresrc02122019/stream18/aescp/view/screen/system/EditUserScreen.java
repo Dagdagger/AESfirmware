@@ -6,6 +6,7 @@ import stream18.aescp.view.button.CancelButton;
 import stream18.aescp.view.button.HomeButton;
 import stream18.aescp.view.form.system.EditUserForm;
 import stream18.aescp.view.screen.Screen;
+import stream18.aescp.view.screen.SystemScreen;
 
 public class EditUserScreen extends Screen {
 
@@ -38,8 +39,7 @@ public class EditUserScreen extends Screen {
     // Screen more than once
 	public void setActive(Screen previousScreen) {
 		theEditUserScreen = EditUserScreen.getInstance();
-		
 		// Now ask the browser to make this screen active
-		Browser.getInstance().setScreen(theEditUserScreen, previousScreen);
+		Browser.getInstance().setScreen(theEditUserScreen, SystemScreen.getInstance());
 	}
 }

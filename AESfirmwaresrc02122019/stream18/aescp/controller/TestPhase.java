@@ -85,9 +85,9 @@ public class TestPhase {
 			case STOPPED:
 				return "Stopped";
 			case STOP_BACK:
-				return "returning";
+				return "Return";
 			case STOP_HBACK:
-				return "returning";
+				return "Return";
 				 
 		}
 		return "?";

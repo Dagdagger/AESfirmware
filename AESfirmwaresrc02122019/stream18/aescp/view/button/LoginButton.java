@@ -1,6 +1,7 @@
 package stream18.aescp.view.button;
 
 import java.awt.Color;
+import stream18.aescp.model.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -44,12 +45,12 @@ public class LoginButton extends Button {
 						//	UserForm.passwordField.getText(), UserForm.roleField.getSelectedIndex());				
 				//isAccessValid(UserForm.passwordField.getText(), UserForm.userField.getSelectedIndex());
 				
-				isAccessValid(UserForm.passwordField.getText(), UserForm.userField.getText());
+				isAccessValid(UserForm.passwordField.getText(), String.valueOf(UserForm.userField.getSelectedItem()), UserForm.usernameField.getText());
 				
-				//System.out.println("user" + " " + UserForm.userField.getSelectedItem()+" "+ "Logged in");	 
-				System.out.println("user" + " " + UserForm.userField.getText()+" "+ "Logged in");
-		        //TestVars.setTestUservar(String.valueOf(UserForm.userField.getSelectedItem()));
-				TestVars.setTestUservar(String.valueOf(UserForm.userField.getText()));
+				System.out.println("user" + " " + UserForm.userField.getSelectedItem()+" "+ "Logged in");	 
+				//System.out.println("user" + " " + UserForm.userField.getToolkit()+" "+ "Logged in");
+		        TestVars.setTestUservar(String.valueOf(UserForm.userField.getSelectedItem()));
+				//TestVars.setTestUservar(String.valueOf(UserForm.userField.getToolkit()));
 			}
 		});
 	}	
@@ -63,33 +64,21 @@ public class LoginButton extends Button {
 	}
 	
 	
-	public static LoginButton isAccessValid(String password, String role) {
-		System.out.println("Hello 0");
+	public static LoginButton isAccessValid(String password, String role, String Username) {
 		//String user = UserForm.userField.getText();
-		String user = role;
 		try{  
 			Class.forName("com.mysql.cj.jdbc.Driver");  
-			System.out.println("Hello 1");
 			Connection con=DriverManager.getConnection(  
-			"jdbc:mysql://localhost:3306/aes?serverTimezone=UTC","root","");  
-			System.out.println("Hello 2");
-			//database name, root is username and password  
+			"jdbc:mysql://localhost/aes?serverTimezone=UTC","root","aes123");  
 			java.sql.Statement stmt=con.createStatement();  
-			System.out.println("Hello 3");
-			//ResultSet rs=stmt.executeQuery("select * from Users");
-			
-			ResultSet rs=stmt.executeQuery("select * from Users where uname = '" + user + "' && psswd ='" + password+ "'");
-			//"SELECT * FROM users WHERE users_name='" + name + "' && users_password='" + password+ "'"
-			System.out.println("Hello 4");
-			//while(rs.next())  
-			//	System.out.println(rs.getInt(1)+"  "+rs.getString(2)+" "+rs.getString(3)+"  "+rs.getString(4));
-			//HomeScreen.getInstance().setActive(null);
+			System.out.println("role = " + role + " Username = " + Username + " Pword = " + password);
+			ResultSet rs=stmt.executeQuery("select * from Users where psswd = '" + password + "' && uname ='" + Username+ "' && role ='" + role+ "'" );
 			if(rs.next())
             {
+				DBConnection.insertAudiTrail("Login", Username);
             	HomeScreen.getInstance().setActive(null);
             }
            else{
-                   //JOptionPane.showMessageDialog(null, "Incorrect Username Or Password", "Login Failed", 2);
                     JOptionPane.showMessageDialog(null, "Access Not Allowed");
                }
 			con.close();  
@@ -102,22 +91,7 @@ public class LoginButton extends Button {
 			}  
 		
 		
-	
-	private static Connection getDBConnection() {
 		
-		Connection conn = null;
-		
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/AES:3306","root","");
-			
-		}catch (Exception ex) {
-			System.out.println(ex.getMessage());
-		}
-		return conn;
-		
-		
-	}
 
 }
 	

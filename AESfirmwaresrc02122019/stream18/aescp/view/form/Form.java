@@ -47,7 +47,7 @@ public abstract class Form extends JPanel {
 
 	private static final int UNITS_GAP = 8;
 
-	protected final int GRAPH_WIDTH = (Browser.SCREEN_WIDTH - Screen.LEFT_WIDTH) / 3 * 2;
+	protected final int GRAPH_WIDTH = (Browser.SCREEN_WIDTH - Screen.LEFT_WIDTH) ;
 	
 	protected Screen parentScreen;
 
@@ -425,7 +425,7 @@ yAxisOpts.range(0, 700);
 				opts.plotPadding(0);
 				opts.legend(LegendFormat.NONE);
 				opts.titleFont(new Font("Arial", 0, 0));
-				opts.labelFont(new Font("Arial", 0, 8));
+				opts.labelFont(new Font("Arial", 0, 16));
 				opts.grids(8, 8);
 				
 				plot = Plot.plot(opts);

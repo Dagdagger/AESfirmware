@@ -3,16 +3,26 @@ import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicRadioButtonMenuItemUI;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+
+import stream18.aescp.view.button.Button;
 import stream18.aescp.view.button.LoginButton;
 import stream18.aescp.view.button.OkButton;
 import stream18.aescp.view.form.Form;
@@ -37,11 +47,12 @@ public class UserForm extends Form {
 	public static JTextField companyPhone;
 	
  
-	public static JTextField userField;
+	public static JComboBox userField;
 	public static String[] userValues = {
-								"Operator 1", "Operator 2", "Operator 3", "Operator 4", "Operator 5",
-								"Supervisor 1", "Supervisor 2", "Supervisor 3", "Supervisor 4", "Supervisor 5",
-								"Manager 1", "Manager 2", "Manager 3", "Manager 4", "Manager 5"
+								"Operator 1",
+								"Supervisor 1",
+								"Manager 1",
+								"Admin"
 								
 								};
 	
@@ -52,11 +63,11 @@ public class UserForm extends Form {
 		Border border = BorderFactory.createLineBorder(new Color(0xeeeeee));
 		Font font = new Font("Courier", Font.BOLD,12);
 
-		userField = createUserField("Role:", LABELS_LEFT, LABELS_TOP + 80, LABELS_WIDTH, 16, true);
-		passwordField = createPasswordField("Password:", LABELS_LEFT, LABELS_TOP + 120, LABELS_WIDTH, 16, true);	
-		//userField = createComboField("Role:", LABELS_LEFT, LABELS_TOP + 80, LABELS_WIDTH, 16, userValues);
-		passwordField = createPasswordField("Password:", LABELS_LEFT, LABELS_TOP + 120, LABELS_WIDTH, 16, true);
-		add(LoginButton.getInstance(LABELS_LEFT + LABELS_WIDTH+10, LABELS_TOP + 160));	
+		
+		userField = createComboField("Role:", LABELS_LEFT, LABELS_TOP + 80, LABELS_WIDTH, 16, userValues);
+		passwordField = createPasswordField("Password:", LABELS_LEFT, LABELS_TOP + 160, LABELS_WIDTH, 16, true);
+		usernameField= createTextField("Username:", LABELS_LEFT, LABELS_TOP + 120, LABELS_WIDTH, 16, true);
+		add(LoginButton.getInstance(LABELS_LEFT + LABELS_WIDTH+10, LABELS_TOP + 200));	
 			
 		companyName = createStatusText("AES Corporation USA ", LABELS_LEFT+300 ,LABELS_TOP + 220,LABELS_WIDTH+150);
 		companyName.setBackground(new Color(0xeeeeee));
@@ -79,6 +90,31 @@ public class UserForm extends Form {
 		companyPhone.setBackground(new Color(0xeeeeee));
 		companyPhone.setBorder(border);
 		companyPhone.setFont(font);
+		
+		
+	
+	BufferedImage myPicture = null;
+	try {
+		InputStream file = Button.class.getClassLoader().getResourceAsStream("resources/logoevolution.png");
+		myPicture = ImageIO.read(file);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+	picLabel.setBounds(400, 90, 300, 100);
+	// JPanel p = new JPanel(); 
+	  
+     // add label to panel 
+    // p.add(picLabel); 
+
+     // add panel to frame 
+     add(picLabel); 
+
+     // set the size of frame 
+	//add(picLabel);
+
+
 		
 		passwordField.setText("1");
 		//add(LoginButton.getInstance(LABELS_LEFT + LABELS_WIDTH, LABELS_TOP + 270));	 

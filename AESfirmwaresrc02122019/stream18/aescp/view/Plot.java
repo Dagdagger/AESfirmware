@@ -61,7 +61,7 @@ public class Plot {
 		private int height = 10;
 		private Color backgroundColor = Color.WHITE;
 		private Color foregroundColor = Color.BLACK;
-		private Font titleFont = new Font("Arial", Font.BOLD, 16);
+		private Font titleFont = new Font("Arial", Font.BOLD, 20);
 		private int padding = 10; // padding for the entire image
 		private int plotPadding = 5; // padding for plot area (to have min and max values padded)
 		private int labelPadding = 10;

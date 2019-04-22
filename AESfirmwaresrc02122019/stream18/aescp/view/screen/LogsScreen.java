@@ -6,6 +6,9 @@ import stream18.aescp.view.button.logs.ClearDataButton;
 import stream18.aescp.view.button.logs.DeleteLogsButton;
 import stream18.aescp.view.button.logs.ExportDataButton;
 import stream18.aescp.view.button.logs.PrintDataButton;
+import stream18.aescp.view.button.logs.ShowAlarmsButton;
+import stream18.aescp.view.button.logs.ShowAudiTrailsButton;
+import stream18.aescp.view.button.logs.ShowCyclesButton;
 import stream18.aescp.view.button.logs.ShowLogsButton;
 import stream18.aescp.view.form.TopForm;
 
@@ -30,11 +33,15 @@ public class LogsScreen extends Screen {
     	// Coordinates are relative to its container, the bottom panel
     	bottom.add(ShowLogsButton.getInstance(x, y));
     	x += gap;
-    	bottom.add(DeleteLogsButton.getInstance(x, y));
-    	
+bottom.add(DeleteLogsButton.getInstance(x, y));
+    	x += gap;
+    	bottom.add(ShowAudiTrailsButton.getInstance(x, y));
     	//x = BTN_MARGIN_H;
-    	//y += vgap;
-
+    	x+=gap;
+    	bottom.add(ShowCyclesButton.getInstance(x, y));
+    	y += vgap;
+    	x = BTN_MARGIN_H;
+    	bottom.add(ShowAlarmsButton.getInstance(x, y));
     //	bottom.add(ExportDataButton.getInstance(x, y));
     //	x += gap;
     	//bottom.add(PrintDataButton.getInstance(x, y));

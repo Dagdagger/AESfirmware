@@ -40,7 +40,7 @@ public class DownProgramButton extends Button {
 					TopForm.progNumber.setText(sNumber);
 					try {
 						number = number+1;
-					    FileInputStream fileIn = new FileInputStream("/tmp/program"+TopForm.progNumber.getText());
+					    FileInputStream fileIn = new FileInputStream("/home/pi/jserial/program"+TopForm.progNumber.getText());
 					    ObjectInputStream in = new ObjectInputStream(fileIn);
 					    tempTestVars lastVars = (tempTestVars) in.readObject();
 					    in.close();

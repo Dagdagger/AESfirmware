@@ -189,8 +189,8 @@ PhaseCfg phase_FAIL = new PhaseCfg(Phase.FAIL, testModeVacuumChamber);
 		phase_FAIL.setValve(1, true);
 		 phase_FAIL.setValve(9, true);
 		 phase_FAIL.setValve(0, true);
+		 phase_FAIL.enableADC(3);
 		 phase_FAIL.setPhaseTime(bleedTime*1000);		
-		 phase_FAIL.disableADCs();
 		 phase_FAIL.setNextPhase(Phase.V_BACK);
 		 
 		 PhaseCfg phase_RESULTS = new PhaseCfg(Phase.RESULTS, testModeVacuumChamber);

@@ -13,6 +13,7 @@ import stream18.aescp.view.button.SetupButton;
 import stream18.aescp.view.button.StartButton;
 import stream18.aescp.view.button.StopButton;
 import stream18.aescp.view.button.SystemButton;
+import stream18.aescp.view.button.system.EditUserButton;
 import stream18.aescp.view.form.TopForm;
 import stream18.aescp.view.screen.mode.FlowScreen;
 import stream18.aescp.view.screen.mode.SK_ModeScreen;
@@ -55,11 +56,16 @@ public class HomeScreen extends Screen {
     	x += gap;
 
     	bottom.add(OpenButton.getInstance(x, y));
-    	x += gap;
+         x += gap;
     	x = BTN_MARGIN_H;//Simo
     	y += vgap;///Simo
     	
     	bottom.add(SystemButton.getInstance(x, y));
+    	
+    	x += gap;
+    	x = BTN_MARGIN_H;//Simo
+    	
+    	bottom.add(EditUserButton.getInstance(x, y));
   
 
     }
@@ -82,6 +88,6 @@ public class HomeScreen extends Screen {
 		theHomeScreen = HomeScreen.getInstance();
 		
 		// Now ask the browser to make this screen active
-		Browser.getInstance().setScreen(theHomeScreen, previousScreen);
+Browser.getInstance().setScreen(theHomeScreen, previousScreen);
 	}
 }

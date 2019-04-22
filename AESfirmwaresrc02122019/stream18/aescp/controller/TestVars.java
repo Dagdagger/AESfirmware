@@ -11,17 +11,21 @@ public class TestVars {
 	static double  pressureToleranceVar;
 	static double  minDropPercentage;
 	static double  maxDropPercentage;
+	static String  programName;
+	static String didPass;
 	
 	static double bleedTime;
 	static double sliderTime;
 	static double clampTime; 
 	static double programNumber;
+	static int Cycles;
 	
 	static String  testUservar;
 	static String  testTimeStampvar;
 	static String  testModevar;
 	static int     testCountervar;
 	static double  testDecayvar;
+	static String  testRoleVar;
 	
 	
 	
@@ -44,6 +48,13 @@ public class TestVars {
 	public static void setminDropPercentage(double minDropPercentage) {
 		TestVars.minDropPercentage= minDropPercentage;
 	}
+	
+public static String getdidPass() {
+		return didPass;
+	}
+public static void setdidPass(String didPass) {
+	TestVars.didPass = didPass;
+}
 
 	
 	public static double getProgramNumber() {
@@ -96,9 +107,16 @@ public static double getBleedTime() {
 public static double getTemperatureVar() {
 		return TemperatureVar;
 	}
+public static void setCycles(int Cycles) {
+	TestVars.Cycles = Cycles;
+}
+public static int getCycles() {
+	return TestVars.Cycles;
+}
+
+
 	
-	
-	public static void setTemperatureVar(double TemperatureVar) {
+public static void setTemperatureVar(double TemperatureVar) {
 		TestVars.TemperatureVar = TemperatureVar;
 	}
 	
@@ -205,7 +223,14 @@ public static double getTemperatureVar() {
 		
 		return maxPressureDrop;
 	}
-
+	
+	public static String gettestRoleVar() {
+		return testRoleVar;
+	}
+    public static void settestRoleVar(String testRoleVar) {
+    	
+    	TestVars.testRoleVar = testRoleVar;
+    }
 
 
  

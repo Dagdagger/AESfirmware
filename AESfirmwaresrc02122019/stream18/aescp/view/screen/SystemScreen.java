@@ -1,9 +1,12 @@
 package stream18.aescp.view.screen;
 
 import stream18.aescp.Browser;
+import stream18.aescp.view.button.CancelButton;
 import stream18.aescp.view.button.HomeButton;
+import stream18.aescp.view.button.system.EditUserButton;
 import stream18.aescp.view.button.system.LanConfigButton;
 import stream18.aescp.view.button.system.LogoutButton;
+import stream18.aescp.view.button.system.ShutDownButton;
 import stream18.aescp.view.button.system.UserAdminButton;
 import stream18.aescp.view.form.TopForm;
 
@@ -25,9 +28,13 @@ public class SystemScreen extends Screen {
     	int vgap = (BOTTOM_HEIGHT - (2*BTN_MARGIN_V)) / 2;
 
     	// Coordinates are relative to its container, the bottom panel
-    	bottom.add(LanConfigButton.getInstance(x, y));
+    	bottom.add(ShutDownButton.getInstance(x, y));
     	x += gap;
       	bottom.add(LogoutButton.getInstance(x, y));
+      	
+      	x+= gap;
+      	
+      	bottom.add(EditUserButton.getInstance(x, y));
 
   
     	
@@ -57,6 +64,6 @@ public class SystemScreen extends Screen {
 		theSystemScreen = SystemScreen.getInstance();
 		
 		// Now ask the browser to make this screen active
-		Browser.getInstance().setScreen(theSystemScreen, previousScreen);
+		Browser.getInstance().setScreen(theSystemScreen, HomeScreen.getInstance());
 	}
 }

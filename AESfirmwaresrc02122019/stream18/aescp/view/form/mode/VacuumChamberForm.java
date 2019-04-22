@@ -24,15 +24,15 @@ public class VacuumChamberForm extends Form {
 		super(parentScreen);
 
 		addPlot();
-		
-		chargeTimeTF = createVTextField("Fill time:", GRAPH_WIDTH + 10, 10, (int) ((Browser.SCREEN_WIDTH - Screen.LEFT_WIDTH) / 3 * 0.9), false);
+		/*
+		chargeTimeTF = createVTextField("Plot Time", GRAPH_WIDTH + 10, 10, (int) ((Browser.SCREEN_WIDTH - Screen.LEFT_WIDTH) / 3 * 0.9), false);
 		chargeTimeTF.setText(String.valueOf(TestVars.getChargevar()));
 		
 		settleTimeTF = createVTextField("Settle time:", GRAPH_WIDTH + 10, 10 + 80, (int) ((Browser.SCREEN_WIDTH - Screen.LEFT_WIDTH) / 3 * 0.9), false);
 		settleTimeTF.setText(String.valueOf(TestVars.getSettlevar()));
 		
 		testTimeTF = createVTextField("Test time:", GRAPH_WIDTH +  10, 10 + 160, (int) ((Browser.SCREEN_WIDTH - Screen.LEFT_WIDTH) / 3 * 0.9), false);
-		testTimeTF.setText(String.valueOf(TestVars.getTestvar()));
+		testTimeTF.setText(String.valueOf(TestVars.getTestvar()));*/
 	 
 	}	
 

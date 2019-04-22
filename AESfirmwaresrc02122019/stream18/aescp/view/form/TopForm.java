@@ -96,7 +96,7 @@ public class TopForm extends Form {
     	unitlbl.setBorder(border);
     	unitlbl.setFont(font);
     	
-    	 gaugePressure = createStatusText("15.000", 538, 10, 80);
+    	 gaugePressure = createStatusText("0.000", 538, 10, 80);
       	 
     	
     	gaugelbl= createStatusText("Unit:", 622, 1, 50);
@@ -104,7 +104,7 @@ public class TopForm extends Form {
     	gaugelbl.setBorder(border);
     	gaugelbl.setFont(font);
     	
-		gaugeUnit = createStatusText("mBAR", 670, 10, 80);
+		gaugeUnit = createStatusText("mBAR", 670, 10, 70);
 		
 		
 		
@@ -245,10 +245,10 @@ public class TopForm extends Form {
 		//testDecayLogs.setVisible(true);
 		//testOperatorLogs.setVisible(true);
 		//testTimeStampLogs.setVisible(true);
- 
-		 
-		
 	}
+	
+	
+	
 
 	public JTextField getProgramlbl() {
 		return programlbl;

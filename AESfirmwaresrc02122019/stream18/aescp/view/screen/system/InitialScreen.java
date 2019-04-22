@@ -3,7 +3,11 @@ package stream18.aescp.view.screen.system;
 
 import java.awt.Color;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -16,6 +20,7 @@ import javax.swing.UIManager;
 
 import stream18.aescp.Browser;
 import stream18.aescp.view.screen.Screen;
+import stream18.aescp.view.button.Button;
 import stream18.aescp.view.form.system.UserForm;
 
 
@@ -26,10 +31,13 @@ public class InitialScreen extends Screen {
 	
 	public InitialScreen() {
     	super(true, true);
+    	
+//bottom.add(picLabel);
      
     	// This screen just contains a form: the login form
     	UserForm.getInstance(this).setBounds(0, 0, bottom.getWidth(), bottom.getHeight());      
     	bottom.add(UserForm.getInstance(this));
+    	
     }
 	
 	public static InitialScreen getInstance() {

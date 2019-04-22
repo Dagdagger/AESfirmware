@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import stream18.aescp.model.DBConnection;
 import stream18.aescp.view.button.Button;
 import stream18.aescp.view.screen.logs.ShowLogsScreen;
 import stream18.aescp.view.screen.logs.ShowLogsScreen2;
@@ -23,6 +24,7 @@ public class DeleteLogsButton extends Button {
 			public void mouseReleased(MouseEvent e) {
 				super.mouseReleased(e);
 				// Select a new Screen for the browser
+				DBConnection.deleteAll();
 				ShowLogsScreen2.removeDataLines();
 			}	
 		});

@@ -2,6 +2,7 @@ package stream18.aescp.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.format.DateTimeFormatter;
 
 import stream18.aescp.Browser;
 import stream18.aescp.controller.TestMode.Mode;
@@ -87,6 +88,8 @@ public class Controller {
 					 	  theTestPhaser = new TestPhaser(theTestPhaseVar);	
 					 	  theTestPhaser.startNewTest(theTestMode.getTestMode());
 						
+						ResultsForm results = theTestPhaser.getResultsForm();
+						results.dateField.setText(java.time.LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
 				}
 			}
 			
@@ -105,11 +108,12 @@ public class Controller {
 						// the status label in the status form
 						theTestStatus.setStatus(Status.SELECT);	
 						
-if (theTestPhaseVar.getPhase() != Phase.RESULTS && theTestPhaseVar.getPhase() != Phase.H_BACK && theTestPhaseVar.getPhase() != Phase.FAIL && theTestPhaseVar.getPhase() != Phase.V_BACK && theTestPhaseVar.getPhase() != Phase.H_FWD) {
-	theTestPhaser.interrupt();
-
+				if (theTestPhaseVar.getPhase() != Phase.RESULTS && theTestPhaseVar.getPhase() != Phase.H_BACK && theTestPhaseVar.getPhase() != Phase.FAIL && theTestPhaseVar.getPhase() != Phase.V_BACK && theTestPhaseVar.getPhase() != Phase.H_FWD) {
+				//	theTestPhaser.interrupt();
+						ResultsForm results = theTestPhaser.getResultsForm();
+						results.setResultFieldStopping(true);
 						theTestPhaser.setStopCase(true);
-						System.out.println("Test stop requested!");
+						results.setResult("Stop Test Requested");
 						theTestStatus.setStatus(Status.SELECT);	
 						//theTestPhaser.interrupt();
 
@@ -120,7 +124,7 @@ if (theTestPhaseVar.getPhase() == Phase.RESULTS) {
 	theTestPhaseVar.setPhase(Phase.FINISHED);
 }
 	
-	if (theTestPhaseVar.getPhase() == Phase.H_FWD) {
+	if (theTestPhaseVar.getPhase() == Phase.H_FWD || theTestPhaseVar.getPhase() == Phase.H_BACK) {
 		ResultsForm results = theTestPhaser.getResultsForm();
 		results.setResultFieldStopping(true);
 		ADCDriver.sendData(cleanValves);
@@ -128,7 +132,7 @@ if (theTestPhaseVar.getPhase() == Phase.RESULTS) {
 		
 		
 	
-}else {
+}/* else {
 
 						
 						// TODO: Stop the test
@@ -142,7 +146,7 @@ if (theTestPhaseVar.getPhase() == Phase.RESULTS) {
 						System.out.println("Test stop requested!");
 						ADCDriver.sendData(bleedValves);
 						theTestStatus.setStatus(Status.SELECT);	
-}
+} */
 				}
 			}
 		});

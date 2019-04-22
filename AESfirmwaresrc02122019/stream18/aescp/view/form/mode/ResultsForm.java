@@ -14,6 +14,8 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import stream18.aescp.Browser;
 import stream18.aescp.controller.TestStatus;
+import stream18.aescp.controller.TestVars;
+import stream18.aescp.model.DBConnection;
 import stream18.aescp.model.Test;
 import stream18.aescp.view.button.StartButton;
 import stream18.aescp.view.button.StopButton;
@@ -27,7 +29,9 @@ public abstract class ResultsForm extends Form {
 
 	private static final int RF_WIDTH = 300;
 	private JTextField testField;
-	private JTextField dateField;
+	public  JTextField dateField;
+	private JTextField passField;
+	private JTextField resultNameField;
 	protected JTextField resultValueField;
 	private static TestStatus theTestStatus;
 	public BigLabel resultFieldPass;
@@ -36,6 +40,7 @@ public abstract class ResultsForm extends Form {
 	public BigLabel resultFieldTesting;
 	public BigLabel resultFieldStopping;
 	public static int cycles;
+	public static int passes;
 	protected JCheckBox resulbtn;
 	protected StartButton bt;
 	private JTextField resultlbl;
@@ -57,14 +62,23 @@ public abstract class ResultsForm extends Form {
 		y = 10;
 	 
 
-    	testField = createTextField("Cycles", x, y, 160, 8, false);		 
-    	testField.setText("");
+    	testField = createTextField("Cycles Tested:", x-15, y, 160, 8, false);		 
+    	testField.setText("0/" + Integer.toString(TestVars.getCycles()));
     	testField.setEditable(false);
+    	setCyclesto0();
+    	
+        passField = createTextField("Passes:", x+173, y, 160, 8, false);		 
+    	passField.setText("0/" + Integer.toString(TestVars.getCycles()));
+    	passField.setEditable(false);
+    	
     	
     	resultValueField = createTextFieldWithUnits(getResultValueText(), x, y + 50, 160, 10, false, getResultValueUnits());
-    	resultValueField.setText("Waiting for Results");
+    	resultValueField.setText(" Waiting...");
     	resultValueField.setEditable(false);
     	
+    	resultNameField = createTextField("Prog Name:", 350, y + 280, 180, 10, false);
+    	resultNameField.setText("NA");
+    	resultNameField.setEditable(false);
     	
     	dateField = createTextField("Date:", x , y+100, 100, 20, false);
     	dateField.setText(java.time.LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
@@ -110,13 +124,38 @@ public abstract class ResultsForm extends Form {
 	}
 	
 	public void updateResultFieldCycles() {
+
 		cycles++;
-		testField.setText(Integer.toString(cycles));
+		if(cycles == TestVars.getCycles()) {
+			DBConnection.insertCycles(passes, cycles-passes, Double.toString(TestVars.getmaxPressureDrop()), Double.toString(TestVars.getChargevar()), TestVars.getTestUservar());
+			cycles = 0;
+		}
+		testField.setText(Integer.toString(cycles) + "/" + Integer.toString(TestVars.getCycles()));
+	}
+	public void setInitialFieldCycles(int thecycles) {
+		cycles = 0;
+		testField.setText("0/" + Integer.toString(thecycles));
+	}
+	public void setInitialFieldPasses(int thecycles) {
+		passes = 0;
+		passField.setText("0/" + Integer.toString(thecycles));
 	}
 	
 	public void setCyclesto0() {
+		cycles = 0;
 		testField.setText("0");
 	}
+	
+	public void setName(String setName) {
+		resultNameField.setText(setName);
+	}
+	
+	
+	public void updateResultFieldPasses() {
+		passes++;
+		passField.setText(Integer.toString(passes) + "/" + Integer.toString(TestVars.getCycles()));
+	}
+	
 	
 	public void setResultFieldTesting(boolean visibility){
 		resultFieldWait.setVisible(false);
@@ -131,7 +170,7 @@ public abstract class ResultsForm extends Form {
 		resultFieldStopping.setVisible(false);
 		resultFieldPass.setVisible(visibility);
 		resultFieldWait.setVisible(false);
-		TimeUnit.SECONDS.sleep(10);
+		TimeUnit.SECONDS.sleep(3);
 		resultFieldPass.setVisible(false);
 		resultFieldWait.setVisible(true);
 
@@ -161,13 +200,32 @@ public abstract class ResultsForm extends Form {
 		resultlbl.setText(result);
 	}
 	
+	public void setResultFieldFailing(boolean visibility, String message) throws InterruptedException {
+		resultFieldTesting.setVisible(false);
+		resultFieldStopping.setVisible(false);
+		resultFieldWait.setVisible(false);
+		resultFieldPass.setVisible(false);
+		resultFieldFail.setVisible(visibility);
+		resultFieldFail.setText(message);
+		
+	}
+	public void setResultFieldPassing(boolean visibility, String message) throws InterruptedException {
+		resultFieldTesting.setVisible(false);
+		resultFieldStopping.setVisible(false);
+		resultFieldWait.setVisible(false);
+		resultFieldFail.setVisible(false);
+		resultFieldPass.setVisible(visibility);
+		resultFieldPass.setText(message);
+		
+	}
+	
 	public void setResultFieldFail(boolean visibility, String message) throws InterruptedException {
 		resultFieldTesting.setVisible(false);
 		resultFieldStopping.setVisible(false);
 		resultFieldFail.setVisible(visibility);
 		resultFieldFail.setText(message);
 		resultFieldWait.setVisible(false);
-		TimeUnit.SECONDS.sleep(10);
+		TimeUnit.SECONDS.sleep(3);
 		resultFieldFail.setVisible(false);
 		resultFieldWait.setVisible(true);
 		
