@@ -47,6 +47,9 @@ public class TestPhaser extends Thread {
 	private TestPhase phaseVar;
 	private ResultsForm theresultsform;
 	double adcValues[];
+	boolean testFail = false;
+	boolean endGrossleak = false;
+	double testAverageSettle = 0.0;
 	boolean pass = true;
 	boolean filled = false;
 	boolean fail = false;
@@ -332,6 +335,7 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 					 }
 					
 					 double averageSettle = getTotalAverage(num);
+					 testAverageSettle = averageSettle;
 					 System.out.println("");
 					 System.out.println("Average Settle Pressure: " + averageSettle);
 					 if(averageSettle < TestVars.getmaxPressureDrop() ) {
@@ -535,6 +539,7 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 						theresultsform.setResultFieldFail(true, errorMessage);
 						ADCDriver.sendData(off);
 						fail = false;
+						testFail = true;
 				}
 					pass = true;
 				}
@@ -600,8 +605,8 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 
 			String timeStamp = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(Calendar.getInstance().getTime());
 			TestVars.setTestTimeStampvar(timeStamp);
-		 DBConnection.insertAudiTrail("Ran Test", ("Test ran by " + TestVars.getTestUservar()));
-			
+		    DBConnection.insertAudiTrail("Ran Test", ("Test ran by " + TestVars.getTestUservar()));
+		    DBConnection.insertLogs(TestVars.getTestModevar(), TestVars.getprogramName(),TestVars.getdidPass(), df.format(testAverageSettle), df.format(TestVars.getmaxPressureDrop()), df.format(TestVars.getChargevar()), df.format(totalDecay), TestVars.getTestUservar());	
 			ShowLogsScreen2.addDataLine();
 			
 		//interrupt();

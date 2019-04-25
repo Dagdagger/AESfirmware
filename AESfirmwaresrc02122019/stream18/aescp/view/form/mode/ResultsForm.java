@@ -77,7 +77,7 @@ public abstract class ResultsForm extends Form {
     	resultValueField.setEditable(false);
     	
     	resultNameField = createTextField("Prog Name:", 350, y + 280, 180, 10, false);
-    	resultNameField.setText("NA");
+    	resultNameField.setText(TestVars.getprogramName());
     	resultNameField.setEditable(false);
     	
     	dateField = createTextField("Date:", x , y+100, 100, 20, false);

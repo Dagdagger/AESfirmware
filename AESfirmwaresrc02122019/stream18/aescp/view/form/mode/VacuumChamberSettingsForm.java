@@ -81,7 +81,6 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 		      + e.getMessage() + e.getClass());
 		   }
 		  
-	 
 		
 		int x = X_LEFT, y = Y_TOP;
 		x = X_LEFT;
@@ -98,6 +97,7 @@ public class VacuumChamberSettingsForm extends SettingsForm {
     	} else {
     		pressureTF.setText(Double.toString(lastVars.getpressureVar()));
     	}
+    	
     	 	
     	x = 260;
     	toleranceTF = createTextFieldWithUnits("Tol: ", x, y, x, 6, true,"%");
@@ -254,6 +254,7 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 	      	}
 		y += 30;
     	
+		
     
     	//testDecayMin = createTextFieldWithUnits("Decay Min: ", x, y, 150, 10, true, "PSI");
     	//testDecayMin.setText("");
@@ -334,6 +335,9 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 		pressureTF.setText(Double.toString(lastVars.getpressureVar()));
 		cyclesTF.setText(Integer.toString(lastVars.getCycles()));
 		nameTF.setText(lastVars.getprogramName());
+		
+			
+			
 		  
 		
 	}
@@ -364,6 +368,7 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 		TestVars.setClampTime(Double.valueOf(clampTimerTF.getText()));
 		TestVars.setSliderTime(Double.valueOf(sliderTimerTF.getText()));
 		TestVars.setProgramNumber(Double.valueOf(TopForm.progNumber.getText()));
+		TestVars.setprogramName(nameTF.getText());
 		TestVars.setminDropPercentage(Double.valueOf(pressureDropMinPercentageTF.getText()));
 		TestVars.setmaxDropPercentage(Double.valueOf(pressureDropMaxPercentageTF.getText()));
 		TestVars.setminPressureDrop(Double.valueOf(pressureDropMinTF.getText()));

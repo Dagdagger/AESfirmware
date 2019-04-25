@@ -13,7 +13,6 @@ import stream18.aescp.view.button.SetupButton;
 import stream18.aescp.view.button.StartButton;
 import stream18.aescp.view.button.StopButton;
 import stream18.aescp.view.button.SystemButton;
-import stream18.aescp.view.button.system.EditUserButton;
 import stream18.aescp.view.form.TopForm;
 import stream18.aescp.view.screen.mode.FlowScreen;
 import stream18.aescp.view.screen.mode.SK_ModeScreen;
@@ -65,7 +64,6 @@ public class HomeScreen extends Screen {
     	x += gap;
     	x = BTN_MARGIN_H;//Simo
     	
-    	bottom.add(EditUserButton.getInstance(x, y));
   
 
     }

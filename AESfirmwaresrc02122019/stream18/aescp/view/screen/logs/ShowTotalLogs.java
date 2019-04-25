@@ -43,9 +43,9 @@ import stream18.aescp.view.screen.Screen;
  * @author Simo
  *
  */
-public class ShowCycles extends Screen {
+public class ShowTotalLogs extends Screen {
 
-	static ShowCycles theShowCycles = null; 
+	static ShowTotalLogs theShowTotalLogs = null; 
     	 
 
 	
@@ -58,7 +58,7 @@ public class ShowCycles extends Screen {
 		"jdbc:mysql://localhost/aes?serverTimezone=UTC","root","aes123");  
 		java.sql.Statement stmt=con.createStatement();  
 		
-		rs = stmt.executeQuery("select * from Cycles");
+		rs = stmt.executeQuery("select * from test_log");
 		Auditable = new JTable(buildTableModel(rs));
 		JScrollPane pane = new JScrollPane(Auditable);
 		Auditable.setEnabled(false);
@@ -77,7 +77,7 @@ public class ShowCycles extends Screen {
     
     
 
-	public ShowCycles() throws SQLException {
+	public ShowTotalLogs() throws SQLException {
     	super(true, true);
 		connect();	
          
@@ -92,32 +92,32 @@ public class ShowCycles extends Screen {
     }
 
 
-	public static ShowCycles getInstance() throws SQLException {
-        if (theShowCycles == null) {
-        	theShowCycles = new ShowCycles();
+	public static ShowTotalLogs getInstance() throws SQLException {
+        if (theShowTotalLogs == null) {
+        	theShowTotalLogs = new ShowTotalLogs();
         }
         
         // This has to be done every time, as the status bar is shared among
         // all the Screens that have a status
-        theShowCycles.addStatus();
-        theShowCycles.addTop();
+        theShowTotalLogs.addStatus();
+        theShowTotalLogs.addTop();
     	TopForm.getInstance(null).showLogsTopForm();   	
     	
-        return theShowCycles;
+        return theShowTotalLogs;
 	}
 
     // This class has a Singleton, to avoid instantiating and removing the
     // Screen more than once
 	public void setActive(Screen previousScreen) {
 		try {
-			theShowCycles = ShowCycles.getInstance();
+			theShowTotalLogs = ShowTotalLogs.getInstance();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		// Now ask the browser to make this screen active
-		Browser.getInstance().setScreen(theShowCycles, previousScreen);
+		Browser.getInstance().setScreen(theShowTotalLogs, previousScreen);
 	}
 	public static Paragraph addTitle(String title){
         Font fontbold = FontFactory.getFont("Times-Roman", 40, Font.BOLD);
@@ -128,25 +128,28 @@ public class ShowCycles extends Screen {
         return p;
    }
 	 
+	 
 	 public void print() {
 		 JTable table = connect();
 		 try {
 		 int count=table.getRowCount();
 		   Document document=new Document();
-		   document.addTitle("Cycles");
-		          PdfWriter.getInstance(document,new FileOutputStream("cyclesTable.pdf"));
+		          PdfWriter.getInstance(document,new FileOutputStream("testsTable.pdf"));
 		          document.open();
-		          PdfPTable tab=new PdfPTable(7);
+		          PdfPTable tab=new PdfPTable(10);
 		          Image img = Image.getInstance("resources/logo.png");
 		          document.add(img);
-		          document.add(addTitle("Cycles"));
+		          document.add(addTitle("Test Results"));
 		          tab.addCell("Num");
-		          tab.addCell("Time");
-		          tab.addCell("User");
-			   	  tab.addCell("numPassed");
-			   	tab.addCell("numFailed");
+		          tab.addCell("TestMode");
+		          tab.addCell("Program");
+			   	  tab.addCell("result");
+			   	tab.addCell("SettleAvg");
+			   	tab.addCell("MaxDrop");
 			   	tab.addCell("Fill Time");
-			   	tab.addCell("max Drop");;
+			   	tab.addCell("Decay");
+			   	tab.addCell("User");
+			   	tab.addCell("StartTime");
 		   for(int i=0;i<count;i++){
 		   Object obj1 = GetData(table, i, 0);
 		   Object obj2 = GetData(table, i, 1);
@@ -155,6 +158,9 @@ public class ShowCycles extends Screen {
 		   Object obj5 = GetData(table, i, 4);
 		   Object obj6 = GetData(table, i, 5);
 		   Object obj7 = GetData(table, i, 6);
+		   Object obj8 = GetData(table, i, 7);
+		   Object obj9 = GetData(table, i, 8);
+		   Object obj10 = GetData(table, i, 9);
 		   String value1=obj1.toString();
 		   String value2=obj2.toString();
 		   String value3=obj3.toString();
@@ -162,6 +168,9 @@ public class ShowCycles extends Screen {
 		   String value5=obj5.toString();
 		   String value6=obj6.toString();
 		   String value7=obj7.toString();
+		   String value8=obj8.toString();
+		   String value9=obj9.toString();
+		   String value10=obj10.toString();
 		   
 		   tab.addCell(value1);
 		   tab.addCell(value2);
@@ -170,6 +179,9 @@ public class ShowCycles extends Screen {
 		   tab.addCell(value5);
 		   tab.addCell(value6);
 		   tab.addCell(value7);
+		   tab.addCell(value8);
+		   tab.addCell(value9);
+		   tab.addCell(value10);
 		   
 		   }
 		   document.add(tab);
@@ -179,7 +191,7 @@ public class ShowCycles extends Screen {
 		  
 		   // processBuilder.command("bash", "-c", "cd ~/");
 			try {
-				String[] b = new String[] {"bash", "-c", "sudo cp ~/cyclesTable.pdf /media/pi/*"};  
+				String[] b = new String[] {"bash", "-c", "sudo cp ~/testsTable.pdf /media/pi/*"};  
 		        Process p = Runtime.getRuntime().exec(b);
 				p.waitFor();
 			} catch (IOException |InterruptedException e1) {

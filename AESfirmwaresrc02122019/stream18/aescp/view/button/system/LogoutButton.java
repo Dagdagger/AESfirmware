@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 import stream18.aescp.Browser;
+import stream18.aescp.controller.TestVars;
 import stream18.aescp.view.button.Button;
 import stream18.aescp.view.screen.system.InitialScreen;
 import stream18.aescp.view.screen.system.LoginScreen;
@@ -28,6 +29,7 @@ public class LogoutButton extends Button {
 				// Select a new Screen for the browser
 				int shouldLogout = Browser.getInstance().displayDialog("Are you sure you want to logout?");
 				if (shouldLogout == 0) {
+					TestVars.setTestUservar("");
 					InitialScreen.getInstance().setActive(null);		
 				/*	try {
 						Process p = Runtime.getRuntime().exec("sudo shutdown -h now");

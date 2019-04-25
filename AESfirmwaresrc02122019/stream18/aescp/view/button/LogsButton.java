@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JOptionPane;
+
+import stream18.aescp.Browser;
+import stream18.aescp.controller.TestVars;
 import stream18.aescp.view.screen.LogsScreen;
 
 public class LogsButton extends Button {
@@ -21,7 +25,18 @@ public class LogsButton extends Button {
 			public void mouseReleased(MouseEvent e) {
 				super.mouseReleased(e);
 				// Select a new Screen for the browser
+			if(TestVars.getTestUservar() == "Operator") {	
+				  Object[] options = {"OK"};
+				    JOptionPane.showOptionDialog(null,
+				                   "No access allowed as an operator","Invalid Access",
+				                   JOptionPane.PLAIN_MESSAGE,
+				                   JOptionPane.PLAIN_MESSAGE,
+				                   null,
+				                   options,
+				                   options[0]);
+			} else {
 				LogsScreen.getInstance().setActive(null);
+			}
 			}	
 		});
 	}

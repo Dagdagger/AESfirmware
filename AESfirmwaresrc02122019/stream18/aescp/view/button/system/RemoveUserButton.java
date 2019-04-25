@@ -3,8 +3,17 @@ package stream18.aescp.view.button.system;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
 
+import javax.swing.JList;
+import javax.swing.ListModel;
+
+import stream18.aescp.model.DBConnection;
 import stream18.aescp.view.button.Button;
+import stream18.aescp.view.form.Form;
+import stream18.aescp.view.form.system.UserAdminForm;
+import stream18.aescp.view.form.system.UserRoleBean;
+import stream18.aescp.view.screen.system.UserAdminScreen;
 
 public class RemoveUserButton extends Button {
 	private static final long serialVersionUID = 1L;
@@ -19,7 +28,13 @@ public class RemoveUserButton extends Button {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				super.mouseReleased(e);
-				// TODO: Notify
+				UserAdminForm f = (UserAdminForm) UserAdminForm.getInstance(null);
+				f.remove();
+				
+
+			    
+				
+			
 			}
 		});
 	}	

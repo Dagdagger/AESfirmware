@@ -2,6 +2,7 @@ package stream18.aescp.view.form;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -12,6 +13,7 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
@@ -24,12 +26,19 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfTemplate;
+import com.itextpdf.text.pdf.PdfWriter;
+
 import stream18.aescp.Browser;
+import stream18.aescp.controller.TestVars;
 import stream18.aescp.view.Plot;
 import stream18.aescp.view.Plot.AxisFormat;
 import stream18.aescp.view.Plot.AxisOptions;
@@ -46,6 +55,7 @@ public abstract class Form extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private static final int UNITS_GAP = 8;
+	//final java.awt.Image image = getImageFromPanel(plotPanel);
 
 	protected final int GRAPH_WIDTH = (Browser.SCREEN_WIDTH - Screen.LEFT_WIDTH) ;
 	
@@ -184,7 +194,19 @@ public abstract class Form extends JPanel {
 	    		public void mousePressed(MouseEvent e) {
 	    			super.mousePressed(e);
 					// I must communicate in some way the field that we are editing
+	    			if(TestVars.getTestUservar() != "Operator") {
 					VKScreen.getInstance(textField).setActive(parentScreen);
+	    			}
+	    			else {
+	    				 Object[] options = {"OK"};
+	 				    JOptionPane.showOptionDialog(null,
+	 				                   "No allowed as an operator","Invalid Access",
+	 				                   JOptionPane.PLAIN_MESSAGE,
+	 				                   JOptionPane.PLAIN_MESSAGE,
+	 				                   null,
+	 				                   options,
+	 				                   options[0]);
+	    			}
 	    		};
 			});
 	    }
@@ -369,7 +391,34 @@ public abstract class Form extends JPanel {
 		add(plotPanel);
 		return plotPanel;
 	}
-	
+/*	 public static java.awt.Image getImageFromPanel(Component component) {
+
+	        BufferedImage image = new BufferedImage(component.getWidth(),
+	                component.getHeight(), BufferedImage.TYPE_INT_RGB);
+	        component.paint(image.getGraphics());
+	        return image;
+	    }
+	 
+	 public void print(JPanel panel) {
+		 try {
+	    Document document = new Document();
+	    PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("plottest.pdf"));
+	    document.open();
+	    PdfContentByte contentByte = writer.getDirectContent();
+	    PdfTemplate template = contentByte.createTemplate(500, 500);
+	    @SuppressWarnings("deprecation")
+		Graphics2D g2 = template.createGraphics(500, 500);
+	    panel.print(g2);
+	    g2.dispose();
+	    contentByte.addTemplate(template, 30, 300);
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }   
+	    }
+
+	 */
+	 
 	public class MyPlotPanel extends JPanel {
 		private static final long serialVersionUID = 1L;
 		Plot plot;

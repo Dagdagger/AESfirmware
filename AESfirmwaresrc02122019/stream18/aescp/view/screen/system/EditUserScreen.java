@@ -19,8 +19,9 @@ public class EditUserScreen extends Screen {
     	// This screen just contains a form: the EditUser form
     	bottom.add(EditUserForm.getInstance(this));
     	EditUserForm.getInstance(this).setBounds(0, 0, bottom.getWidth(), bottom.getHeight());
-    	
-    	leftSide.add(new CancelButton(HomeButton.DEFAULT_X, HomeButton.DEFAULT_Y));
+    	CancelButton ourCancelButton = new CancelButton(HomeButton.DEFAULT_X, HomeButton.DEFAULT_Y);
+    	leftSide.add(ourCancelButton);
+    	ourCancelButton.setPreviousScreen(SystemScreen.getInstance());
     }
 	
 	public static EditUserScreen getInstance() {

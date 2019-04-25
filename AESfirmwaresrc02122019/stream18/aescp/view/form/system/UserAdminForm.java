@@ -10,8 +10,14 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.border.Border;
+import javax.swing.event.ListSelectionListener;
 
 import stream18.aescp.Browser;
+import stream18.aescp.model.DBConnection;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import stream18.aescp.view.button.system.AddUserButton;
 import stream18.aescp.view.button.system.EditUserButton;
 import stream18.aescp.view.button.system.RemoveUserButton;
@@ -26,6 +32,7 @@ public class UserAdminForm extends Form {
 	private static UserAdminForm theUserAdminForm;
 	
 	protected DefaultListModel<UserRoleBean> dm;
+	public JList<UserRoleBean> jList;
 	
 	public UserAdminForm(Screen parentScreen) {
 		super(parentScreen);
@@ -34,10 +41,11 @@ public class UserAdminForm extends Form {
 		
 		jScrollPane1.getVerticalScrollBar().setPreferredSize(new Dimension(40, 40));
 		
-		JList<UserRoleBean> jList = new JList<UserRoleBean>();
-
+        jList = new JList<UserRoleBean>();
 		dm = new DefaultListModel<UserRoleBean>();
 		populateDM();
+		ListSelectionListener listener = null;
+		jList.addListSelectionListener(listener);
 		jList.setModel(dm);
 		
 		jList.setCellRenderer(new UserAdminRenderer());
@@ -77,17 +85,42 @@ public class UserAdminForm extends Form {
 		return theUserAdminForm;
 	}
 	
+	public void  remove() {
+		int i = jList.getSelectedIndex();
+		UserRoleBean j = dm.getElementAt(i);
+		String k = j.getRole();
+		String o = j.getUsername();
+		dm.removeElementAt(i);
+		Connection con = DBConnection.getConnection();
+		try {
+		java.sql.Statement stmt=con.createStatement();  
+		stmt.executeUpdate("delete from Users where uname = '" + o + "' && role ='" + k + "'" );
+		}
+		catch (Exception e)
+        {
+          System.err.println("Got an exception!");
+          System.err.println(e.getMessage());
+        }
+		}
+	
+	
 	protected void populateDM() {
-		dm.clear();
-		dm.addElement(new UserRoleBean("User_1", "Admin"));
-		dm.addElement(new UserRoleBean("User_2", "Operator"));
-		dm.addElement(new UserRoleBean("User_3", "Operator"));
-		dm.addElement(new UserRoleBean("User_4", "Admin"));
-		dm.addElement(new UserRoleBean("User_5", "Operator"));
-		dm.addElement(new UserRoleBean("User_6", "Operator"));
-		dm.addElement(new UserRoleBean("User_7", "Operator"));
-		dm.addElement(new UserRoleBean("User_8", "Operator"));
-		dm.addElement(new UserRoleBean("User_9", "Admin"));
-		dm.addElement(new UserRoleBean("User_A", "Operator"));
+			dm.clear();
+			
+Connection con = DBConnection.getConnection();
+			try {
+			java.sql.Statement stmt=con.createStatement();  
+				ResultSet rs=stmt.executeQuery("select * from Users");
+				while (rs.next()){
+	                String name = rs.getString(3);
+	                String role = rs.getString(4);
+	                dm.addElement(new UserRoleBean(name, role)); 
+	            }
+	 
+			}catch (Exception ex) {
+				System.out.println(ex.getMessage());
+			
+			}
+
 	}
 }

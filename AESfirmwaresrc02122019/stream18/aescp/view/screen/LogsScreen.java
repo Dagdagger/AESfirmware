@@ -10,6 +10,7 @@ import stream18.aescp.view.button.logs.ShowAlarmsButton;
 import stream18.aescp.view.button.logs.ShowAudiTrailsButton;
 import stream18.aescp.view.button.logs.ShowCyclesButton;
 import stream18.aescp.view.button.logs.ShowLogsButton;
+import stream18.aescp.view.button.logs.ShowTotalLogsButton;
 import stream18.aescp.view.form.TopForm;
 
 
@@ -42,6 +43,8 @@ bottom.add(DeleteLogsButton.getInstance(x, y));
     	y += vgap;
     	x = BTN_MARGIN_H;
     	bottom.add(ShowAlarmsButton.getInstance(x, y));
+    	x += gap;
+    	bottom.add(ShowTotalLogsButton.getInstance(x, y));
     //	bottom.add(ExportDataButton.getInstance(x, y));
     //	x += gap;
     	//bottom.add(PrintDataButton.getInstance(x, y));

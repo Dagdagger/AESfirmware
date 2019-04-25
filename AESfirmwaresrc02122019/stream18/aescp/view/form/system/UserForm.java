@@ -49,9 +49,9 @@ public class UserForm extends Form {
  
 	public static JComboBox userField;
 	public static String[] userValues = {
-								"Operator 1",
-								"Supervisor 1",
-								"Manager 1",
+								"Operator",
+								"Supervisor",
+								"Manager",
 								"Admin"
 								
 								};

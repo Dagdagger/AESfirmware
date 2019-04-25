@@ -231,6 +231,15 @@ public static void setTemperatureVar(double TemperatureVar) {
     	
     	TestVars.testRoleVar = testRoleVar;
     }
+    
+    
+    public static String getprogramName() {
+    	return programName;
+    }
+    
+    public static void setprogramName(String programName) {
+    	TestVars.programName = programName;
+    }
 
 
  

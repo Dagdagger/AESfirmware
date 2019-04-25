@@ -9,6 +9,7 @@ import java.io.IOException;
 import com.lowagie.text.Document;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfTemplate;
 import com.lowagie.text.pdf.PdfWriter;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -99,16 +100,16 @@ public class ShowLogsScreen2 extends Screen {
 	 public static void print() {
 		    Document document = new Document(PageSize.A4.rotate());
 		    try {
-		      PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("jTable.pdf"));
+		      PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("testsjTable.pdf"));
 
 		      document.open();
 		      PdfContentByte cb = writer.getDirectContent();
 
 		      cb.saveState();
-		      Graphics2D g2 = cb.createGraphicsShapes(500, 500);
 
+			  Graphics2D g2 = cb.createGraphics(1000, 500);
 		      Shape oldClip = g2.getClip();
-		      g2.clipRect(-100, -100, 700, 700);
+		      g2.clipRect(0, 0, 5000, 5000);
 
 		      table.print(g2);
 		      g2.setClip(oldClip);
@@ -121,7 +122,7 @@ public class ShowLogsScreen2 extends Screen {
 		    document.close();
 		   // processBuilder.command("bash", "-c", "cd ~/");
 			try {
-				String[] b = new String[] {"bash", "-c", "sudo cp ~/jTable.pdf /media/pi/*"};  
+				String[] b = new String[] {"bash", "-c", "sudo cp ~/testsjTable.pdf /media/pi/*"};  
 		        Process p = Runtime.getRuntime().exec(b);
 				p.waitFor();
 			} catch (IOException |InterruptedException e1) {

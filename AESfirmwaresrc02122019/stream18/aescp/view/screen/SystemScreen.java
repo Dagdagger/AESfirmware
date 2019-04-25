@@ -3,9 +3,10 @@ package stream18.aescp.view.screen;
 import stream18.aescp.Browser;
 import stream18.aescp.view.button.CancelButton;
 import stream18.aescp.view.button.HomeButton;
-import stream18.aescp.view.button.system.EditUserButton;
+import stream18.aescp.view.button.system.AddUserButton;
 import stream18.aescp.view.button.system.LanConfigButton;
 import stream18.aescp.view.button.system.LogoutButton;
+import stream18.aescp.view.button.system.RemoveUserButton;
 import stream18.aescp.view.button.system.ShutDownButton;
 import stream18.aescp.view.button.system.UserAdminButton;
 import stream18.aescp.view.form.TopForm;
@@ -33,8 +34,8 @@ public class SystemScreen extends Screen {
       	bottom.add(LogoutButton.getInstance(x, y));
       	
       	x+= gap;
-      	
-      	bottom.add(EditUserButton.getInstance(x, y));
+      	bottom.add(UserAdminButton.getInstance(x, y));
+
 
   
     	

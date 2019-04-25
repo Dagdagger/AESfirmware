@@ -25,7 +25,9 @@ public class ShowAudiTrailsButton extends Button {
 				super.mouseReleased(e);
 				// Select a new Screen for the browser
 				try {
-					ShowAudiTrails.getInstance().setActive(null);
+					ShowAudiTrails hello = ShowAudiTrails.getInstance();
+					hello.setActive(null);
+					hello.connect();
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

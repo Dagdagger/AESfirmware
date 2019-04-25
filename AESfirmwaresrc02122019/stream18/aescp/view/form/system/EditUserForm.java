@@ -3,9 +3,12 @@ package stream18.aescp.view.form.system;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
+import stream18.aescp.Browser;
 import stream18.aescp.view.button.OkButton;
 import stream18.aescp.view.form.Form;
 import stream18.aescp.view.screen.Screen;
+import stream18.aescp.view.screen.SystemScreen;
+import stream18.aescp.view.screen.system.EditUserScreen;
 
 public class EditUserForm extends Form {
 	private static final long serialVersionUID = 1L;
@@ -19,7 +22,7 @@ public class EditUserForm extends Form {
 	private JTextField passwordField;
 	private JComboBox roleField;
 
-	private String[] roleValues = {"Admin", "Operator"};
+	private String[] roleValues = {"Operator", "Supervisor", "Admin"};
 	
 	public EditUserForm(Screen parentScreen) {
 		super(parentScreen);
@@ -35,7 +38,6 @@ public class EditUserForm extends Form {
 		if (theEditUserForm == null) {
 			theEditUserForm = new EditUserForm(parentScreen);
 		}
-		
 		return theEditUserForm;
 	}
 }

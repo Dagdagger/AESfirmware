@@ -50,14 +50,21 @@ Connection con = null;
 		
 		public static void insertAudiTrail(String action, String details) {
 			
+			 java.util.Date date = null;
+		      java.sql.Timestamp timeStamp = null;
+			
 		    try
 		    {
 		      Connection conn =  getConnection();
 		    
 		      // create a sql date object so we can use it in our INSERT statement
-		      Calendar calendar = Calendar.getInstance();
-		      java.sql.Date startDate = new java.sql.Date(calendar.getTime().getTime());
-
+		      Calendar calendar=Calendar.getInstance();
+		      calendar.setTime(new Date());
+		      java.sql.Date dt = new java.sql.Date(calendar.getTimeInMillis());
+		      java.sql.Time sqlTime=new java.sql.Time(calendar.getTime().getTime());
+		      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		      date = simpleDateFormat.parse(dt.toString()+" "+sqlTime.toString());
+		      timeStamp = new java.sql.Timestamp(date.getTime());
 		      // the mysql insert statement
 		      String query = " insert into Auditrails(Action, Details, Start_Date)"
 		        + " values (?, ?, ?)";
@@ -66,7 +73,7 @@ Connection con = null;
 		      PreparedStatement preparedStmt = conn.prepareStatement(query);
 		      preparedStmt.setString (1, action);
 		      preparedStmt.setString (2, details);
-		      preparedStmt.setDate   (3, startDate);
+		      preparedStmt.setTimestamp(3, timeStamp);  
 
 		      preparedStmt.execute();
 		      
@@ -82,13 +89,21 @@ Connection con = null;
 		
 		public static void insertAlarm(String action, String details) {
 			
+			 java.util.Date date = null;
+		      java.sql.Timestamp timeStamp = null;
+			
 		    try
 		    {
 		      Connection conn =  getConnection();
 		    
 		      // create a sql date object so we can use it in our INSERT statement
-		      Calendar calendar = Calendar.getInstance();
-		      java.sql.Date startDate = new java.sql.Date(calendar.getTime().getTime());
+		      Calendar calendar=Calendar.getInstance();
+		      calendar.setTime(new Date());
+		      java.sql.Date dt = new java.sql.Date(calendar.getTimeInMillis());
+		      java.sql.Time sqlTime=new java.sql.Time(calendar.getTime().getTime());
+		      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		      date = simpleDateFormat.parse(dt.toString()+" "+sqlTime.toString());
+		      timeStamp = new java.sql.Timestamp(date.getTime());
 
 		      // the mysql insert statement
 		      String query = " insert into alarms(Action, Details, Start_Date)"
@@ -98,7 +113,7 @@ Connection con = null;
 		      PreparedStatement preparedStmt = conn.prepareStatement(query);
 		      preparedStmt.setString (1, action);
 		      preparedStmt.setString (2, details);
-		      preparedStmt.setDate   (3, startDate);
+		      preparedStmt.setTimestamp   (3, timeStamp);
 
 		      preparedStmt.execute();
 		      
@@ -110,6 +125,47 @@ Connection con = null;
 		      System.err.println(e.getMessage());
 		    }
 	}
+		
+		public static void insertLogs(String testMode, String programName, String result,  String averageSettle, String maxDrop, String fillTime,String decay, String User) {
+			
+		    try
+		    {
+		      Connection conn =  getConnection();
+		    
+		      // create a sql date object so we can use it in our INSERT statement
+		      Calendar calendar = Calendar.getInstance();
+		      java.sql.Date startDate = new java.sql.Date(calendar.getTime().getTime());
+
+		      // the mysql insert statement
+		      String query = " insert into test_log(testmode, program, result, average_settle, max_drop, fill_time, decay, user, startDate)"
+		        + " values (?, ?, ?, ?, ?, ?,?,?,?)";
+
+		      // create the mysql insert prepared statement
+		      PreparedStatement preparedStmt = conn.prepareStatement(query);
+		      preparedStmt.setString(1,testMode );
+		      preparedStmt.setString (2, programName);
+		      preparedStmt.setString  (3, result);
+		      preparedStmt.setString (4, averageSettle);
+		      preparedStmt.setString(5, maxDrop);
+		      preparedStmt.setString(6, fillTime);
+		      preparedStmt.setString(7, decay);
+		      preparedStmt.setString(8, User);
+		      
+		      
+		      
+		      preparedStmt.setDate(9, startDate);
+		      
+
+		      preparedStmt.execute();
+		      
+		      conn.close();
+		    }
+		    catch (Exception e)
+		    {
+		      System.err.println("Got an exception!");
+		      System.err.println(e.getMessage());
+		    }
+		}
 public static void insertUser(String Username, String Password, String role) {
 			
 		    try
@@ -173,14 +229,21 @@ public static void insertTest(String Username, String Password, String role) {
     }
 }
 public static void insertCycles(int numPassed, int numFailed, String minDrop, String fillTime, String User) {
+	 java.util.Date date = null;
+     java.sql.Timestamp timeStamp = null;
 	
-    try
-    {
-      Connection conn =  getConnection();
-    
-      // create a sql date object so we can use it in our INSERT statement
-      Calendar calendar = Calendar.getInstance();
-      java.sql.Date startDate = new java.sql.Date(calendar.getTime().getTime());
+   try
+   {
+     Connection conn =  getConnection();
+   
+     // create a sql date object so we can use it in our INSERT statement
+     Calendar calendar=Calendar.getInstance();
+     calendar.setTime(new Date());
+     java.sql.Date dt = new java.sql.Date(calendar.getTimeInMillis());
+     java.sql.Time sqlTime=new java.sql.Time(calendar.getTime().getTime());
+     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+     date = simpleDateFormat.parse(dt.toString()+" "+sqlTime.toString());
+     timeStamp = new java.sql.Timestamp(date.getTime());
 
       // the mysql insert statement
       String query = " insert into cycles(numPassed, numFailed, minDrop, fillTime, User, startDate)"
@@ -193,7 +256,7 @@ public static void insertCycles(int numPassed, int numFailed, String minDrop, St
       preparedStmt.setString  (3, minDrop);
       preparedStmt.setString (4, fillTime);
       preparedStmt.setString(5, User);
-      preparedStmt.setDate(6, startDate);
+      preparedStmt.setTimestamp(6, timeStamp);
 
       preparedStmt.execute();
       
@@ -217,14 +280,14 @@ public static void insertCycles(int numPassed, int numFailed, String minDrop, St
 
           // the mysql insert statement
           java.sql.Statement stmt=conn.createStatement();  
-			stmt.executeQuery("delete from Auditrails");
+			stmt.executeUpdate("delete from Auditrails");
 
 			 stmt=conn.createStatement();  
-		     stmt.executeQuery("delete from cycles");
+		     stmt.executeUpdate("delete from cycles");
 
 			
 			stmt=conn.createStatement();  
-			stmt.executeQuery("delete from alarms");
+			stmt.executeUpdate("delete from alarms");
 
           // create the mysql insert prepared statement
 
