@@ -50,6 +50,7 @@ public class LoginButton extends Button {
 				System.out.println("user" + " " + UserForm.userField.getSelectedItem()+" "+ "Logged in");	 
 				//System.out.println("user" + " " + UserForm.userField.getToolkit()+" "+ "Logged in");
 		        TestVars.setTestUservar(String.valueOf(UserForm.userField.getSelectedItem()));
+		        TestVars.settestRoleVar(UserForm.usernameField.getText());
 				//TestVars.setTestUservar(String.valueOf(UserForm.userField.getToolkit()));
 			}
 		});

@@ -17,7 +17,7 @@ public class ShowAlarmsButton extends Button {
 	public ShowAlarmsButton(int x, int y) {
 		super(BOTTOM_TYPE);
 		moveTo(x, y, 1);
-		config("resources/logs/ShowLogs.png", "Alarms", new Color(0xFF1388));
+		config("resources/logs/ShowLogs.png", "Alarms", new Color(0x4b0082));
 		
 		addMouseListener(new MouseAdapter() {
 			@Override

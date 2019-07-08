@@ -13,10 +13,12 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.OptionalDouble;
 
@@ -32,10 +34,10 @@ import javax.swing.JPasswordField;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfTemplate;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.lowagie.text.Document;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfTemplate;
+import com.lowagie.text.pdf.PdfWriter;
 
 import stream18.aescp.Browser;
 import stream18.aescp.controller.TestVars;
@@ -46,6 +48,7 @@ import stream18.aescp.view.Plot.Data;
 import stream18.aescp.view.Plot.LegendFormat;
 import stream18.aescp.view.Plot.PlotOptions;
 import stream18.aescp.view.button.Button;
+import stream18.aescp.view.button.StartBatchesButton;
 import stream18.aescp.view.button.StartButton;
 import stream18.aescp.view.screen.Screen;
 import stream18.aescp.view.screen.VKScreen;
@@ -63,6 +66,7 @@ public abstract class Form extends JPanel {
 
 	static public MyPlotPanel plotPanel;
 	static public StartButton but;
+	static public StartBatchesButton boot;
 
 	public Form(Screen parentScreen) {
 		this.parentScreen = parentScreen;
@@ -200,7 +204,7 @@ public abstract class Form extends JPanel {
 	    			else {
 	    				 Object[] options = {"OK"};
 	 				    JOptionPane.showOptionDialog(null,
-	 				                   "No allowed as an operator","Invalid Access",
+	 				                   "No editing allowed as an operator","Invalid Access",
 	 				                   JOptionPane.PLAIN_MESSAGE,
 	 				                   JOptionPane.PLAIN_MESSAGE,
 	 				                   null,
@@ -387,27 +391,32 @@ public abstract class Form extends JPanel {
 	 */
 	protected MyPlotPanel addPlot() {
 		plotPanel = new MyPlotPanel();
-		plotPanel.setBounds(0, 0, GRAPH_WIDTH, Screen.BOTTOM_HEIGHT - Screen.STATUS_HEIGHT);
+		plotPanel.setBounds(0, 0, GRAPH_WIDTH, Screen.BOTTOM_HEIGHT - Screen.STATUS_HEIGHT+10);
 		add(plotPanel);
 		return plotPanel;
 	}
-/*	 public static java.awt.Image getImageFromPanel(Component component) {
+	
+	public MyPlotPanel getplot() {
+		return Form.plotPanel;
+	}
+	 public static java.awt.Image getImageFromPanel(Component component) {
 
 	        BufferedImage image = new BufferedImage(component.getWidth(),
 	                component.getHeight(), BufferedImage.TYPE_INT_RGB);
 	        component.paint(image.getGraphics());
 	        return image;
 	    }
+
 	 
-	 public void print(JPanel panel) {
+	 public void print() {
+		 MyPlotPanel panel = getplot();
 		 try {
 	    Document document = new Document();
 	    PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("plottest.pdf"));
 	    document.open();
 	    PdfContentByte contentByte = writer.getDirectContent();
 	    PdfTemplate template = contentByte.createTemplate(500, 500);
-	    @SuppressWarnings("deprecation")
-		Graphics2D g2 = template.createGraphics(500, 500);
+	    Graphics2D g2 = template.createGraphics(500, 500);
 	    panel.print(g2);
 	    g2.dispose();
 	    contentByte.addTemplate(template, 30, 300);
@@ -417,7 +426,7 @@ public abstract class Form extends JPanel {
 	        }   
 	    }
 
-	 */
+	 
 	 
 	public class MyPlotPanel extends JPanel {
 		private static final long serialVersionUID = 1L;
@@ -469,7 +478,7 @@ yAxisOpts.range(0, 700);
 	          
 				opts = Plot.plotOpts();
 				opts.width(GRAPH_WIDTH);
-				opts.height(Screen.BOTTOM_HEIGHT - Screen.STATUS_HEIGHT);
+				opts.height((Screen.BOTTOM_HEIGHT-15) - Screen.STATUS_HEIGHT);
 				opts.padding(0);
 				opts.plotPadding(0);
 				opts.legend(LegendFormat.NONE);
@@ -504,6 +513,51 @@ yAxisOpts.range(0, 700);
 				e.printStackTrace();
 			}
 		  }
+		 
+		 public void print() {
+			 
+			 try {
+		    Document document = new Document();
+		    PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("plottest.pdf"));
+		    document.open();
+		    PdfContentByte contentByte = writer.getDirectContent();
+		    PdfTemplate template = contentByte.createTemplate(500, 500);
+		    Graphics2D g2 = template.createGraphics(500, 500);
+		    this.print(g2);
+		    g2.dispose();
+		    contentByte.addTemplate(template, 30, 300);
+
+		        } catch (Exception e) {
+		            e.printStackTrace();
+		        }   
+		    }
+ public void meprint() {
+			 
+			 try {
+				 BufferedImage bi = new BufferedImage(this.getSize().width, this.getSize().height+100, BufferedImage.TYPE_INT_ARGB); 
+				 Graphics g = bi.createGraphics();
+				 g.setColor(Color.WHITE);
+				 
+			        g.fillRect(0, 0, bi.getWidth(), bi.getHeight());
+			        g.drawImage(bi, 0, 0, bi.getWidth(), bi.getHeight(), null);
+				 //g.dispose();
+				 this.paint(g);  //this == JComponent
+				 g.setFont(new Font("TimesRoman", Font.PLAIN, 16));
+				 g.drawString("Test Taken by:" + " " + TestVars.getTestUservar() + " " + TestVars.gettestRoleVar() , 20, 350);
+				 
+				 g.drawString("Test Status:" + " " + TestVars.getdidPass(), 20, 370);
+				 DateTimeFormatter timeStampPattern = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+				 String time = timeStampPattern.format(java.time.LocalDateTime.now());
+				 g.drawString("Time taken:" + " " + time, 20, 390);
+				 g.dispose();
+				 timeStampPattern = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+				 time = timeStampPattern.format(java.time.LocalDateTime.now());
+				 try{ImageIO.write(bi,"png",new File("plots/test"+time+".png"));}catch (Exception e) {}
+
+		        } catch (Exception e) {
+		            e.printStackTrace();
+		        }   
+		    }
 		
 		
 		public JTable createTable(Array row) {

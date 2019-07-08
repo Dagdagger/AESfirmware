@@ -85,8 +85,14 @@ public class UserAdminForm extends Form {
 		return theUserAdminForm;
 	}
 	
+	public void addToTable(String name, String role) {
+		
+		dm.addElement(new UserRoleBean(name, role));
+		
+	}
+	
 	public void  remove() {
-		int i = jList.getSelectedIndex();
+        int i = jList.getSelectedIndex();
 		UserRoleBean j = dm.getElementAt(i);
 		String k = j.getRole();
 		String o = j.getUsername();
@@ -102,6 +108,16 @@ public class UserAdminForm extends Form {
           System.err.println(e.getMessage());
         }
 		}
+	public UserRoleBean getSelected() {
+int i = jList.getSelectedIndex();
+		UserRoleBean j = dm.getElementAt(i);
+		return j;
+	}
+	
+	public int checkifSelected() {
+		int i = jList.getSelectedIndex();
+		return i;
+	}
 	
 	
 	protected void populateDM() {
@@ -112,7 +128,7 @@ Connection con = DBConnection.getConnection();
 			java.sql.Statement stmt=con.createStatement();  
 				ResultSet rs=stmt.executeQuery("select * from Users");
 				while (rs.next()){
-	                String name = rs.getString(3);
+	                String name = rs.getString(2);
 	                String role = rs.getString(4);
 	                dm.addElement(new UserRoleBean(name, role)); 
 	            }

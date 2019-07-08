@@ -15,7 +15,7 @@ public class StatusForm extends Form {
 	private static StatusForm theStatusForm;
 	private JPanel statusIcon;
 	private JTextField statusText;
-	private JCheckBox statusLockedCB;
+	private JPanel statusLockedCB;
 	private JTextField statusTime;
 
 	public StatusForm(Screen parentScreen) {
@@ -35,11 +35,12 @@ public class StatusForm extends Form {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 	    String formattedTime=time.format(formatter);
 		
-		statusIcon = createIcon("resources/Ok.png", 5, 5, 40, 40);
+		
+		statusIcon = createIcon("resources/logo.png", 5, 5, 40, 40);
 		
     	statusText = createStatusText(" Select", 5 + 60, 5, 200);
 
-    	statusLockedCB = createCheckBox("Locked", 300, 5, 200, 40);
+    	statusLockedCB = createIcon("resources/logoevolution.png", 300, 1, 190, 50);
 
     	statusTime = createStatusText(formattedTime, 525, 5, 200);
 
@@ -55,6 +56,13 @@ public class StatusForm extends Form {
 	
 	public void setStatusText(String newStatusText) {
 		statusText.setText(newStatusText);
+	}
+
+	public void updateTime() {
+		LocalTime time = LocalTime.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+	    String formattedTime=time.format(formatter);
+		statusTime.setText(formattedTime);
 	}
 
 	private static final long serialVersionUID = 1L;

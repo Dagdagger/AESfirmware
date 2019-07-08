@@ -52,8 +52,6 @@ public class UserForm extends Form {
 								"Operator",
 								"Supervisor",
 								"Manager",
-								"Admin"
-								
 								};
 	
 	

@@ -40,7 +40,7 @@ public abstract class SK_ModeScreen extends Screen {
 	private static ActionListener commonActionListener;
 	private TestMode theTestMode;
 	
-	public SK_ModeScreen(String firstTabTitle, Form theResultsForm, Form theGraphForm, Form theSettingsForm) {
+	public SK_ModeScreen(String firstTabTitle, Form theResultsForm, Form theGraphForm, Form theSettingsForm, Form theBatchesForm) {
     	super(true, true);
     	theResultsForm.setParentScreen(this);
     	theGraphForm.setParentScreen(this);
@@ -75,6 +75,10 @@ public abstract class SK_ModeScreen extends Screen {
         tabbedPane.addTab("Settings", icon3, panel3,
                 "Test settings");
         tabbedPane.setBackgroundAt(2, new Color(0x444444));
+        
+        JComponent panel4  = makeFormPanel(theBatchesForm); 
+        tabbedPane.addTab("Batches", icon3, panel4, "Batches Settings");
+        tabbedPane.setBackgroundAt(3,  new Color (0x444444));
         
         tabbedPane.setBounds(new Rectangle(0,  0, Browser.SCREEN_WIDTH - LEFT_WIDTH, BOTTOM_HEIGHT));
     	bottom.add(tabbedPane);

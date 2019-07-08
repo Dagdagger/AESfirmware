@@ -3,8 +3,11 @@ package stream18.aescp.view.screen.logs;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -14,22 +17,25 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Vector;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfStamper;
+import com.lowagie.text.pdf.PdfWriter;
 
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import stream18.aescp.Browser;
 import stream18.aescp.controller.TestVars;
 import stream18.aescp.model.DBConnection;
+import stream18.aescp.view.button.Button;
 import stream18.aescp.view.button.DownLogsButton;
 import stream18.aescp.view.button.HomeButton;
 import stream18.aescp.view.button.logs.TurntoPDFButton;
@@ -65,7 +71,10 @@ public class ShowTotalLogs extends Screen {
 		pane.setBounds(new Rectangle(0,  0, Browser.SCREEN_WIDTH - LEFT_WIDTH, BOTTOM_HEIGHT));
 		System.out.println("I Was here!");
 		Auditable.repaint();
+		SwingUtilities.updateComponentTreeUI(pane);
        	bottom.add(pane);   
+       	SwingUtilities.updateComponentTreeUI(pane);
+
 		con.close(); 
 	    }
     	
@@ -93,15 +102,13 @@ public class ShowTotalLogs extends Screen {
 
 
 	public static ShowTotalLogs getInstance() throws SQLException {
-        if (theShowTotalLogs == null) {
         	theShowTotalLogs = new ShowTotalLogs();
-        }
         
         // This has to be done every time, as the status bar is shared among
         // all the Screens that have a status
         theShowTotalLogs.addStatus();
         theShowTotalLogs.addTop();
-    	TopForm.getInstance(null).showLogsTopForm();   	
+    	TopForm.getInstance(null).showLogsTopForm("Test Logs");   	
     	
         return theShowTotalLogs;
 	}
@@ -133,13 +140,27 @@ public class ShowTotalLogs extends Screen {
 		 JTable table = connect();
 		 try {
 		 int count=table.getRowCount();
-		   Document document=new Document();
-		          PdfWriter.getInstance(document,new FileOutputStream("testsTable.pdf"));
+		   Document document=new Document(PageSize.A4.rotate());
+		         PdfWriter writer = PdfWriter.getInstance(document,new FileOutputStream("BatchesTable.pdf"));
 		          document.open();
+		          PdfContentByte cb = writer.getDirectContent();
+		          PdfReader reader = new PdfReader(new FileInputStream("BatchTable.pdf"));
+		          
+		          PdfImportedPage page = writer.getImportedPage(reader, 1);
+		          
+		          
+		          document.newPage();
+
+		          cb.addTemplate(page, 0, -1f, 1f, 0, 0,PageSize.A4.getWidth() );
+		          document.newPage();
 		          PdfPTable tab=new PdfPTable(10);
-		          Image img = Image.getInstance("resources/logo.png");
-		          document.add(img);
-		          document.add(addTitle("Test Results"));
+		          BufferedImage img = null;
+		  		  InputStream file = Button.class.getClassLoader().getResourceAsStream("resources/logo.png");
+		  		  img = ImageIO.read(file);
+		  		PdfContentByte pdfCB = new PdfContentByte(writer);
+		        Image image = Image.getInstance(pdfCB, img, 1);
+		         // document.add(image);
+		          document.add(addTitle("Batch Test Results"));
 		          tab.addCell("Num");
 		          tab.addCell("TestMode");
 		          tab.addCell("Program");
@@ -187,7 +208,7 @@ public class ShowTotalLogs extends Screen {
 		   document.add(tab);
 		   document.close();
 		       }
-		       catch(Exception e){}
+		       catch(Exception e){e.printStackTrace();}
 		  
 		   // processBuilder.command("bash", "-c", "cd ~/");
 			try {

@@ -13,7 +13,7 @@ public class SaveParmsButton extends Button {
 	public SaveParmsButton(int x, int y) {
 		super(BOTTOM_TYPE);
 		moveTo(x, y, 1);
-		config("resources/Save.png", "Save", new Color(0x3C90CB));
+		config("resources/Save.png", "Set/Save", new Color(0x3C90CB));
 
 	}	
 

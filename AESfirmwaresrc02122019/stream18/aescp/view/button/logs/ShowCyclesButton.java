@@ -17,7 +17,7 @@ public class ShowCyclesButton extends Button {
 	public ShowCyclesButton(int x, int y) {
 		super(BOTTOM_TYPE);
 		moveTo(x, y, 1);
-		config("resources/logs/ShowLogs.png", "Cycles", new Color(0xFF1F88));
+		config("resources/logs/ShowLogs.png", "Cycles", new Color(0xBDB76B));
 		
 		addMouseListener(new MouseAdapter() {
 			@Override

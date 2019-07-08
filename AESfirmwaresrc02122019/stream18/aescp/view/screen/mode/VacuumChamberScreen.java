@@ -5,6 +5,7 @@ import stream18.aescp.view.button.LogsNavButton;
 import stream18.aescp.view.button.UpLogsButton;
 import stream18.aescp.view.button.UpProgramButton;
 import stream18.aescp.view.form.TopForm;
+import stream18.aescp.view.form.mode.VacuumChamberBatchesForm;
 import stream18.aescp.view.form.mode.VacuumChamberForm;
 import stream18.aescp.view.form.mode.VacuumChamberResultsForm;
 import stream18.aescp.view.form.mode.VacuumChamberSettingsForm;
@@ -20,7 +21,8 @@ public class VacuumChamberScreen extends SK_ModeScreen {
     	super("Vacuum Chamber",
     			VacuumChamberResultsForm.getInstance(null),
     			VacuumChamberForm.getInstance(null),
-    			VacuumChamberSettingsForm.getInstance(null));
+    			VacuumChamberSettingsForm.getInstance(null),
+    			VacuumChamberBatchesForm.getInstance(null));
     	
 		leftSide.add(new UpProgramButton(LogsNavButton.DEFAULT_X, LogsNavButton.DEFAULT_Y-300));
     	leftSide.add(new DownProgramButton(LogsNavButton.DEFAULT_X, LogsNavButton.DEFAULT_Y-200));

@@ -53,16 +53,16 @@ public class TestModeCfgManager {
 		
 		
 		/* The valves in the array are as follows:
-		 * Clamp = 0
-		 * Slider = 1
+		 * EVB - Clamp = 0
+		 * EVA - Slider = 1
 		 * Ev8"Not set yet" = 2
 		 * "Reference" = 3
 		 * Ev6 "Not set yet" = 4
-		 * Green Light = 5
-		 * Red Light = 6
-		 * Fill = 7
-		 * Vacuum = 8
-		 * Bleed = 9
+		 * EV5 - Green Light = 5
+		 * Ev4 - Red Light = 6
+		 * EV3 - Fill = 7
+		 * EV2 - Vacuum = 8
+		 * EV1 - Bleed = 9
 		 */
 		
 		
@@ -157,14 +157,46 @@ public class TestModeCfgManager {
 		
 		PhaseCfg phaseVENT2 = new PhaseCfg(Phase.VENT, testModeVacuumChamber);
 		phaseVENT2.setValves(cleanValves);
+		phaseVENT2.setValve(5, true);
 		phaseVENT2.setValve(9, true);
 		phaseVENT2.setValve(8, false);
 		phaseVENT2.enableADC(3);
 		phaseVENT2.setPhaseTime(bleedTime*1000);
 		cleanValves = phaseVENT2.getValves();
-		phaseVENT2.setNextPhase(Phase.V_BACK);
+		phaseVENT2.setNextPhase(Phase.PASSV_BACK);
+		
+
+		PhaseCfg phasePASSV_BACK2 = new PhaseCfg(Phase.PASSV_BACK, testModeVacuumChamber);
+		phasePASSV_BACK2.setValves(cleanValves);
+		phasePASSV_BACK2.setValve(5, true);
+		phasePASSV_BACK2.setValve(9,  false);
+		phasePASSV_BACK2.setValve(0, false);
+		phasePASSV_BACK2.setPhaseTime(5000);
+		cleanValves = phasePASSV_BACK2.getValves();
+		phasePASSV_BACK2.setNextPhase(Phase.PASSH_BACK);
+		
+		/* Release the Slider */
+
+		PhaseCfg phasePASSH_BACK2 = new PhaseCfg(Phase.PASSH_BACK, testModeVacuumChamber);
+		//phaseH_BACK2.setValves(cleanValves);
+		phasePASSH_BACK2.setValves(emptyValves);
+		phasePASSH_BACK2.setValve(5, true);
+		phasePASSH_BACK2.setValve(1, false);
+		phasePASSH_BACK2.setValve(9, true);
+		phasePASSH_BACK2.setPhaseTime(2000);
+		phasePASSH_BACK2.setNextPhase(Phase.RESULTS);	
 		
 		/* Release the Clamp */
+		PhaseCfg phase_FAIL = new PhaseCfg(Phase.FAIL, testModeVacuumChamber);
+		 //phase_FAIL.setValves(emptyValves);
+		 phase_FAIL.setValve(1, true);
+		 phase_FAIL.setValve(6, true);
+		 phase_FAIL.setValve(9, true);
+		 phase_FAIL.setValve(0, true);
+		 phase_FAIL.enableADC(3);
+		 cleanValves = phase_FAIL.getValves();
+		 phase_FAIL.setPhaseTime(bleedTime*1000);		
+		 phase_FAIL.setNextPhase(Phase.V_BACK);
 
 		PhaseCfg phaseV_BACK2 = new PhaseCfg(Phase.V_BACK, testModeVacuumChamber);
 		phaseV_BACK2.setValves(cleanValves);
@@ -180,18 +212,12 @@ public class TestModeCfgManager {
 		//phaseH_BACK2.setValves(cleanValves);
 		phaseH_BACK2.setValves(emptyValves);
 		phaseH_BACK2.setValve(1, false);
+		phaseH_BACK2.setValve(6, true);
+
 		phaseH_BACK2.setValve(9, true);
 		phaseH_BACK2.setPhaseTime(2000);
 		phaseH_BACK2.setNextPhase(Phase.RESULTS);	
 		
-PhaseCfg phase_FAIL = new PhaseCfg(Phase.FAIL, testModeVacuumChamber);
-		 //phase_FAIL.setValves(emptyValves);
-		phase_FAIL.setValve(1, true);
-		 phase_FAIL.setValve(9, true);
-		 phase_FAIL.setValve(0, true);
-		 phase_FAIL.enableADC(3);
-		 phase_FAIL.setPhaseTime(bleedTime*1000);		
-		 phase_FAIL.setNextPhase(Phase.V_BACK);
 		 
 		 PhaseCfg phase_RESULTS = new PhaseCfg(Phase.RESULTS, testModeVacuumChamber);
 		 phase_RESULTS.setValves(emptyValves);

@@ -72,7 +72,7 @@ public class ShowLogsScreen2 extends Screen {
         // all the Screens that have a status
         theShowLogsScreen.addStatus();
         theShowLogsScreen.addTop();
-    	TopForm.getInstance(null).showLogsTopForm();   	
+    	TopForm.getInstance(null).showLogsTopForm("Test Logs");   	
     	
         return theShowLogsScreen;
 	}

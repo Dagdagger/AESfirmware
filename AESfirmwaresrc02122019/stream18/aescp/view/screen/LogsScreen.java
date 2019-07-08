@@ -34,7 +34,7 @@ public class LogsScreen extends Screen {
     	// Coordinates are relative to its container, the bottom panel
     	bottom.add(ShowLogsButton.getInstance(x, y));
     	x += gap;
-bottom.add(DeleteLogsButton.getInstance(x, y));
+		bottom.add(DeleteLogsButton.getInstance(x, y));
     	x += gap;
     	bottom.add(ShowAudiTrailsButton.getInstance(x, y));
     	//x = BTN_MARGIN_H;

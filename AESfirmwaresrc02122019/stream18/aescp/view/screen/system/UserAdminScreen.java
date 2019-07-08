@@ -26,9 +26,9 @@ public class UserAdminScreen extends Screen {
     }
 	
 	public static UserAdminScreen getInstance() {
-        if (theUserAdminScreen == null) {
+//		if(theUserAdminScreen == null) {
         	theUserAdminScreen = new UserAdminScreen();
-        }
+//		}
         
         // This has to be done every time, as the status bar is shared among
         // all the Screens that have a status

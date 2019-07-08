@@ -25,7 +25,9 @@ import stream18.aescp.model.Program;
 import stream18.aescp.model.tempTestVars;
 import stream18.aescp.view.button.DownProgramButton;
 import stream18.aescp.view.button.LogsNavButton;
+import stream18.aescp.view.button.ModeButton;
 import stream18.aescp.view.button.SaveParmsButton;
+import stream18.aescp.view.button.ScanButton;
 import stream18.aescp.view.button.UpProgramButton;
 import stream18.aescp.view.form.Form;
 import stream18.aescp.view.form.TopForm;
@@ -80,7 +82,6 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 		    System.err.println("\nError creating chamber settings Object. None exists?\n"
 		      + e.getMessage() + e.getClass());
 		   }
-		  
 		
 		int x = X_LEFT, y = Y_TOP;
 		x = X_LEFT;
@@ -97,6 +98,7 @@ public class VacuumChamberSettingsForm extends SettingsForm {
     	} else {
     		pressureTF.setText(Double.toString(lastVars.getpressureVar()));
     	}
+    	pressureTF.setHighlighter(null);
     	
     	 	
     	x = 260;
@@ -106,15 +108,16 @@ public class VacuumChamberSettingsForm extends SettingsForm {
       	} else {
       		toleranceTF.setText(Double.toString(lastVars.getpressureToleranceVar()));
       	}
-      	 	
+      	 	toleranceTF.setHighlighter(null);
     	x = X_LEFT;
     	y += 30;    	
     	pressureDropMinTF = createTextFieldWithUnits("Min Drop: ", x, y, 150, 10, true, "mBar");
     	if ( lastVars == null) {
-        	  pressureDropMinTF.setText("0.0");
+        	  pressureDropMinTF.setText("10");
         	} else {
         		pressureDropMinTF.setText(dif.format(lastVars.getminPressureDrop()));
         	}
+    	pressureDropMinTF.setHighlighter(null);
     	
     	
     	
@@ -129,7 +132,7 @@ public class VacuumChamberSettingsForm extends SettingsForm {
       	} else {
       		pressureDropMinPercentageTF.setText(dif.format(lastVars.getminDropPercentage()));
       	}
-    	
+    	pressureDropMinPercentageTF.setHighlighter(null);
     	
     	
     	x = X_LEFT;
@@ -143,6 +146,7 @@ public class VacuumChamberSettingsForm extends SettingsForm {
       	} else {
       		pressureDropMaxTF.setText(dif.format(lastVars.getmaxPressureDrop()));
       	}
+    	pressureDropMaxTF.setHighlighter(null);
     	
     	
     	
@@ -156,6 +160,7 @@ public class VacuumChamberSettingsForm extends SettingsForm {
         	} else {
         		pressureDropMaxPercentageTF.setText(dif.format(lastVars.getMaxDropPercentage()));
         	}
+    	pressureDropMaxPercentageTF.setHighlighter(null);
       	
     	
     	
@@ -167,10 +172,11 @@ public class VacuumChamberSettingsForm extends SettingsForm {
     	
     	chargeTimeTF = createTextFieldWithUnits("Fill: ", x, y, 150, 10, true, "Sec");
     	if ( lastVars == null) {
-        	  chargeTimeTF.setText("0.0");
+        	  chargeTimeTF.setText("1.0");
         	} else {
         		chargeTimeTF.setText(Double.toString(lastVars.getChargevar()));
         	       }
+    	chargeTimeTF.setHighlighter(null);
         		
 		x = 260;    	
 		cyclesTF = createTextFieldWithUnits("Cycle: ", x, y, x, 6, true, "Times" );
@@ -179,6 +185,7 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 			} else {
 					cyclesTF.setText(Integer.toString(lastVars.getCycles()));
 			}
+		cyclesTF.setHighlighter(null);
 		
 		nameTF = createTextFieldWithUnits("ProgName: ", x, y+30, x, 6, true, "");
 		if ( lastVars == null) {
@@ -186,6 +193,7 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 			} else {
 					nameTF.setText((lastVars.getprogramName()));
 			}
+		nameTF.setHighlighter(null);
 		
 		
 
@@ -194,11 +202,11 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 
     	settleTimeTF = createTextFieldWithUnits("Settle: ", x, y, 150, 10, true, "Sec");
     	if ( lastVars == null) {
-      	  settleTimeTF.setText("0.0");
+      	  settleTimeTF.setText("2.0");
       	} else {
       		settleTimeTF.setText(Double.toString(lastVars.getSettlevar()));
       	}
-    	
+    	settleTimeTF.setHighlighter(null);
     	
     	
     	
@@ -206,10 +214,11 @@ public class VacuumChamberSettingsForm extends SettingsForm {
     	y += 30;
     	testTimeTF = createTextFieldWithUnits("Test: ", x, y, 150, 10, true, "Sec");
     	if ( lastVars == null) {
-        	  testTimeTF.setText("0.0");
+        	  testTimeTF.setText("1.0");
         	} else {
         		testTimeTF.setText(Double.toString(lastVars.getTestvar()));
         	}
+    	testTimeTF.setHighlighter(null);
       	
     	
     	
@@ -221,17 +230,19 @@ public class VacuumChamberSettingsForm extends SettingsForm {
     	y += 30;
     	testDecay = createTextFieldWithUnits("Decay: ", x, y, 150, 10, true, "mBar");
     	if ( lastVars == null) {
-      	  testDecay.setText("0.0");
+      	  testDecay.setText("1.0");
       	} else {
       		testDecay.setText(Double.toString(lastVars.getDecayVar()));
       	} 
+    	testDecay.setHighlighter(null);
     	y += 30;
 		clampTimerTF = createTextFieldWithUnits("Clamp Valve: ", x, y, 150, 10, true, "sec");
 		if ( lastVars == null) {
-      	  clampTimerTF.setText("0.0");
+      	  clampTimerTF.setText("1.0");
       	} else {
       		clampTimerTF.setText(Double.toString(lastVars.getClampTime()));
       	}
+		clampTimerTF.setHighlighter(null);
     	
 		
 		
@@ -240,18 +251,20 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 		y += 30;
 		bleedTimerTF = createTextFieldWithUnits("Bleed Valve: ", x, y, 150, 10, true, "sec");
 		if ( lastVars == null) {
-	      	  bleedTimerTF.setText("0.0");
+	      	  bleedTimerTF.setText("1.0");
 	      	} else {
 	      	bleedTimerTF.setText(Double.toString(lastVars.getBleedTime()));
 	      	}
+		bleedTimerTF.setHighlighter(null);
 		
 		y += 30;
 		sliderTimerTF = createTextFieldWithUnits("Slider Valve: ", x, y, 150, 10, true, "sec");
 		if ( lastVars == null) {
-	      	  sliderTimerTF.setText("0.0");
+	      	  sliderTimerTF.setText("1.0");
 	      	} else {
 	      		sliderTimerTF.setText(Double.toString(lastVars.getSliderTime()));
 	      	}
+		sliderTimerTF.setHighlighter(null);
 		y += 30;
     	
 		
@@ -267,9 +280,9 @@ public class VacuumChamberSettingsForm extends SettingsForm {
  *
  ***********************************************************************************************************************/
     	x = 260;
-    	SaveParmsButton saveBTN = new SaveParmsButton(350 + 100, 200);
+    	SaveParmsButton saveBTN = new SaveParmsButton(350 + 30, 185);
     	add(saveBTN);
-    	
+    	add(new ScanButton(550, 185));	
     	//TestVars.setChargevar(Integer.parseInt(chargeTimeTF.getText()));
     	//Test.getInstance().setTestFillTimer(Integer.parseInt(chargeTimeTF.getText()));
     	
@@ -336,6 +349,27 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 		cyclesTF.setText(Integer.toString(lastVars.getCycles()));
 		nameTF.setText(lastVars.getprogramName());
 		
+		TestVars.setpressureVar(Double.valueOf(pressureTF.getText()));
+		TestVars.setDecay(Double.valueOf(testDecay.getText()));
+		TestVars.setChargevar(Double.valueOf(chargeTimeTF.getText()));
+		TestVars.setSettlevar(Double.valueOf(settleTimeTF.getText()));
+		TestVars.setTestvar(Double.valueOf(testTimeTF.getText()));
+		TestVars.setpressureVar(Double.valueOf(pressureTF.getText()));
+		TestVars.setpressureToleranceVar(0.01*(Double.valueOf(toleranceTF.getText())));
+		TestVars.setBleedTime(Double.valueOf(bleedTimerTF.getText()));
+		TestVars.setClampTime(Double.valueOf(clampTimerTF.getText()));
+		TestVars.setSliderTime(Double.valueOf(sliderTimerTF.getText()));
+		TestVars.setProgramNumber(Double.valueOf(TopForm.progNumber.getText()));
+		TestVars.setprogramName(nameTF.getText());
+		TestVars.setminDropPercentage(Double.valueOf(pressureDropMinPercentageTF.getText()));
+		TestVars.setmaxDropPercentage(Double.valueOf(pressureDropMaxPercentageTF.getText()));
+		TestVars.setminPressureDrop(Double.valueOf(pressureDropMinTF.getText()));
+		TestVars.setmaxPressureDrop(Double.valueOf(pressureDropMaxTF.getText()));
+		TestVars.setCycles(Integer.valueOf(cyclesTF.getText()));
+		ResultsForm theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);	
+		theresultsform.setInitialFieldCycles(Integer.valueOf(cyclesTF.getText()));
+		theresultsform.setInitialFieldPasses(Integer.valueOf(cyclesTF.getText()));
+		
 			
 			
 		  
@@ -397,7 +431,7 @@ public class VacuumChamberSettingsForm extends SettingsForm {
 		e.setprogramName(nameTF.getText());
 		theresultsform.setName(e.getprogramName());
 		
-		DBConnection.insertAudiTrail("Settings for Prog "+ Integer.toString(e.getProgramNumber()), "Changed by" + TestVars.getTestUservar());
+		DBConnection.insertAudiTrail("Settings for Prog "+ Integer.toString(e.getProgramNumber()), "Changed by  " + TestVars.getTestUservar());
 		 try {
 	         FileOutputStream fileOut =
 	         new FileOutputStream("/home/pi/jserial/program"+TopForm.progNumber.getText());

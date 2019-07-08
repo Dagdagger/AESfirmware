@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 import stream18.aescp.Browser;
+import stream18.aescp.drivers.ADCDriver;
 import stream18.aescp.view.button.Button;
 import stream18.aescp.view.screen.system.InitialScreen;
 import stream18.aescp.view.screen.system.LoginScreen;
@@ -18,7 +19,7 @@ public class ShutDownButton extends Button {
 	public ShutDownButton(int x, int y) {
 		super(BOTTOM_TYPE);
 		moveTo(x, y, 1);
-		config("resources/system/logout.png", "ShutDown", new Color(0xaaaaaa));
+		config("resources/system/logout.png", "ShutDown", new Color(0xFF1493));
 		
 		addMouseListener(new MouseAdapter() {
 			@Override
@@ -30,6 +31,8 @@ public class ShutDownButton extends Button {
 				if (shouldShutDown == 0) {
 					InitialScreen.getInstance().setActive(null);		
 					try {
+						boolean emptyValves[] = {false, false, false, false, false,false, false, false, false, false};
+						ADCDriver.sendData(emptyValves);
 						Process p = Runtime.getRuntime().exec("sudo shutdown -h now");
 						p.waitFor();
 					} catch (IOException | InterruptedException e1) {

@@ -235,9 +235,9 @@ public class TopForm extends Form {
 	}
 	
 
-	public void showLogsTopForm() {
+	public void showLogsTopForm(String logs) {
 		clearTopForm();
-		getProgramlbl().setText("logs-V:");
+		getProgramlbl().setText(logs);
 		getProgramlbl().setVisible(true);
 		
 		//testNumlblLogs.setVisible(true);

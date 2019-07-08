@@ -31,7 +31,7 @@ public class TestPhase {
 	}
 	
 	public static enum Phase {
-		READY, H_FWD, V_FWD, FILL, SETTLE, TEST, VENT, V_BACK, H_BACK, FINISHED, EXHAUST, FAIL, PASS, RESULTS, STOPPED, STOP_BACK, STOP_HBACK
+		READY, H_FWD, V_FWD, FILL, SETTLE, TEST, VENT, V_BACK, H_BACK, FINISHED, EXHAUST, FAIL, PASS, RESULTS, STOPPED, STOP_BACK, STOP_HBACK, PASSV_BACK, PASSH_BACK
 	}
  
 	Phase thePhase;
@@ -72,10 +72,15 @@ public class TestPhase {
 				return "Settle";
 			case TEST:
 				return "Test";
+			
 			case VENT:
 				return "Vent";
 			case V_BACK:
 				return "Lid Open";
+			case PASSV_BACK:
+				return "Lid Open";
+			case PASSH_BACK:
+				return "Eject";
 			case H_BACK:
 				return "Eject";
 			case FINISHED:

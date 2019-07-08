@@ -3,8 +3,10 @@ package stream18.aescp.view.screen.logs;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.image.BufferedImage;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -14,22 +16,22 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Vector;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import stream18.aescp.Browser;
 import stream18.aescp.controller.TestVars;
 import stream18.aescp.model.DBConnection;
+import stream18.aescp.view.button.Button;
 import stream18.aescp.view.button.DownLogsButton;
 import stream18.aescp.view.button.HomeButton;
 import stream18.aescp.view.button.logs.TurntoPDFButton;
@@ -40,7 +42,7 @@ import stream18.aescp.view.screen.HomeScreen;
 import stream18.aescp.view.screen.Screen;
 
 /**
- * @author Simo
+ * @author Omar
  *
  */
 public class ShowCycles extends Screen {
@@ -66,6 +68,8 @@ public class ShowCycles extends Screen {
 		System.out.println("I Was here!");
 		Auditable.repaint();
        	bottom.add(pane);   
+       	SwingUtilities.updateComponentTreeUI(pane);
+       	
 		con.close(); 
 	    }
     	
@@ -93,15 +97,13 @@ public class ShowCycles extends Screen {
 
 
 	public static ShowCycles getInstance() throws SQLException {
-        if (theShowCycles == null) {
         	theShowCycles = new ShowCycles();
-        }
         
         // This has to be done every time, as the status bar is shared among
         // all the Screens that have a status
         theShowCycles.addStatus();
         theShowCycles.addTop();
-    	TopForm.getInstance(null).showLogsTopForm();   	
+    	TopForm.getInstance(null).showLogsTopForm("Cycles");   	
     	
         return theShowCycles;
 	}
@@ -130,23 +132,38 @@ public class ShowCycles extends Screen {
 	 
 	 public void print() {
 		 JTable table = connect();
-		 try {
+try {
 		 int count=table.getRowCount();
-		   Document document=new Document();
+		   Document document=new Document(PageSize.A4.rotate());
 		   document.addTitle("Cycles");
-		          PdfWriter.getInstance(document,new FileOutputStream("cyclesTable.pdf"));
+		          PdfWriter writer = PdfWriter.getInstance(document,new FileOutputStream("cyclesTable.pdf"));
 		          document.open();
-		          PdfPTable tab=new PdfPTable(7);
-		          Image img = Image.getInstance("resources/logo.png");
-		          document.add(img);
+		          PdfPTable tab=new PdfPTable(11);
+		          BufferedImage img = null;
+		  		  InputStream file = Button.class.getClassLoader().getResourceAsStream("resources/logo.png");
+		  		  img = ImageIO.read(file);
+		  		PdfContentByte pdfCB = new PdfContentByte(writer);
+		        Image image = Image.getInstance(pdfCB, img, 1);
+		          document.add(image);
+		          
+		          BufferedImage imgtwo = null;
+		          InputStream filetwo = Button.class.getClassLoader().getResourceAsStream("resources/logoevolution.png");
+		          imgtwo = ImageIO.read(filetwo);
+		          Image imagetwo = Image.getInstance(pdfCB, imgtwo, 1);
+		          
+		          imagetwo.setAbsolutePosition(500, 480);
 		          document.add(addTitle("Cycles"));
 		          tab.addCell("Num");
 		          tab.addCell("Time");
 		          tab.addCell("User");
 			   	  tab.addCell("numPassed");
-			   	tab.addCell("numFailed");
-			   	tab.addCell("Fill Time");
-			   	tab.addCell("max Drop");;
+					   tab.addCell("numFailed");
+					   tab.addCell("Fill Time");
+					   tab.addCell("max Drop");
+					   tab.addCell("Program");
+					   tab.addCell("Mean Pres.");
+					   tab.addCell("Pres. Range");
+					   tab.addCell("Std. Dev.");
 		   for(int i=0;i<count;i++){
 		   Object obj1 = GetData(table, i, 0);
 		   Object obj2 = GetData(table, i, 1);
@@ -155,6 +172,10 @@ public class ShowCycles extends Screen {
 		   Object obj5 = GetData(table, i, 4);
 		   Object obj6 = GetData(table, i, 5);
 		   Object obj7 = GetData(table, i, 6);
+		   Object obj8 = GetData(table, i, 7);
+		   Object obj9 = GetData(table, i, 8);
+		   Object obj10 = GetData(table, i, 9);
+		   Object obj11 = GetData(table, i, 10);
 		   String value1=obj1.toString();
 		   String value2=obj2.toString();
 		   String value3=obj3.toString();
@@ -162,6 +183,10 @@ public class ShowCycles extends Screen {
 		   String value5=obj5.toString();
 		   String value6=obj6.toString();
 		   String value7=obj7.toString();
+		   String value8=obj8.toString();
+		   String value9 = obj9.toString();
+		   String value10 = obj10.toString();
+		   String value11 = obj11.toString();
 		   
 		   tab.addCell(value1);
 		   tab.addCell(value2);
@@ -170,16 +195,20 @@ public class ShowCycles extends Screen {
 		   tab.addCell(value5);
 		   tab.addCell(value6);
 		   tab.addCell(value7);
+		   tab.addCell(value8);
+		   tab.addCell(value9);
+		   tab.addCell(value10);
+		   tab.addCell(value11);
 		   
 		   }
 		   document.add(tab);
 		   document.close();
 		       }
-		       catch(Exception e){}
+		       catch(Exception e){e.printStackTrace();}
 		  
 		   // processBuilder.command("bash", "-c", "cd ~/");
 			try {
-				String[] b = new String[] {"bash", "-c", "sudo cp ~/cyclesTable.pdf /media/pi/*"};  
+				String[] b = new String[] {"bash", "-c", "./copypdfs.sh"};
 		        Process p = Runtime.getRuntime().exec(b);
 				p.waitFor();
 			} catch (IOException |InterruptedException e1) {

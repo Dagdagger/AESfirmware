@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javafx.scene.control.Alert;
+import stream18.aescp.controller.BatchVars;
 import stream18.aescp.controller.TestLogger;
 import stream18.aescp.controller.TestMode;
 import stream18.aescp.controller.TestMode.Mode;
@@ -30,6 +31,8 @@ import stream18.aescp.view.form.Form;
 import stream18.aescp.view.form.StatusForm;
 import stream18.aescp.view.form.TopForm;
 import stream18.aescp.view.form.mode.ResultsForm;
+import stream18.aescp.view.form.mode.VacuumChamberBatchesForm;
+import stream18.aescp.view.form.mode.BatchesForm;
 import stream18.aescp.view.form.mode.VacuumChamberResultsForm;
 import stream18.aescp.view.screen.logs.ShowLogsScreen2;
 import stream18.aescp.view.screen.mode.VacuumChamberScreen;
@@ -46,6 +49,7 @@ public class TestPhaser extends Thread {
 	private TestModeCfg theTestModeCfg;
 	private TestPhase phaseVar;
 	private ResultsForm theresultsform;
+	private BatchesForm thebatchesform;
 	double adcValues[];
 	boolean testFail = false;
 	boolean endGrossleak = false;
@@ -54,6 +58,7 @@ public class TestPhaser extends Thread {
 	boolean filled = false;
 	boolean fail = false;
 	boolean stopCase = false;
+	boolean fillFail = false;
 	boolean retreatCase = false; // case for stopping before slider goes in
 	int jumps = 0;
 	int numberOfReadings;
@@ -72,6 +77,10 @@ public class TestPhaser extends Thread {
 	}
  public ResultsForm getResultsForm() {
 	 return theresultsform;
+ }
+ 
+ public BatchesForm getBatchesForm() {
+	 return thebatchesform;
  }
  
 
@@ -98,6 +107,7 @@ public class TestPhaser extends Thread {
  		// Find the TestModeCfg for the TestMode
 theTestModeCfg = TestModeCfgManager.find(mode);	
 theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
+thebatchesform = (BatchesForm) VacuumChamberBatchesForm.getInstance(null);
 
 
 		
@@ -195,7 +205,10 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 						if(i == 0) {
 							firstValue = adcValues[3]; 
 						}
-						
+					
+						if(stopCase) {
+							phaseCfgTime = 0;
+						}
 						if (lastValue != adcValues[3]) {
 							jumps++;
 						}
@@ -243,7 +256,7 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 					 
 					}*/
 				}
-			
+				phaseCfgTime= setTimer();
 				long timeElapsed = System.currentTimeMillis() - phaseStartTime; 
 				System.out.println("Time Elapsed" + timeElapsed);
 				/* END OF ALL PHASES AND WHERE WE CAN CHECK FOR PRESSURE VALUES AND RESULTS 
@@ -285,49 +298,32 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 				 if (phaseVar.getPhase() == Phase.SETTLE) {
 					 
 					 
-					/* if (adcValues[3] < filltoSettle - (filltoSettle*(0.01*TestVars.getpressureToleranceVar()))){
-						    System.out.println("LOST TOO MUCH FROM FILL TO SETTLE");
+					 if (filltoSettle < pressure - (pressure*TestVars.getpressureToleranceVar())){
+						    System.out.println("LOW FILL");
 							pass = false;
-							TestVars.setdidPass("Gross Leak in Settle");
-							theresultsform.setResultFieldDecay(" Gross Leak");
-							String temp = df.format(adcValues[3]);
-							errorMessage = "GROSS LEAK";
-							theresultsform.setResult("FAIL GROSS LEAK " + temp);
+							TestVars.setdidPass("Low Fill");
+							DBConnection.insertAlarm("Fail Low Fill", ("Test ran by " + TestVars.getTestUservar() + " " + TestVars.gettestRoleVar()));
+
+							theresultsform.setResultFieldDecay(" Low Fill");
+						//	String temp = df.format(adcValues[3]);
+							errorMessage = "LOW FILL";
+							theresultsform.setResult("LOW FILL " + filltoSettle);
+							fillFail = true;
 						 
 					 }
-					 if (adcValues[3] < TestVars.getmaxPressureDrop());{
-						    System.out.println("LOST TOO MUCH according to pressure drop in SETTLE");
+					 if (filltoSettle > pressure + (pressure*TestVars.getpressureToleranceVar())){
+						    System.out.println("HIGH FILL");
 							pass = false;
-							TestVars.setdidPass("Gross Leak in Settle");
-							String temp = df.format(adcValues[3]);
-							theresultsform.setResultFieldDecay(" Gross Leak");
-							errorMessage = "GROSS LEAK";
-							theresultsform.setResult("FAIL GROSS LEAK " + temp);
+							TestVars.setdidPass("HIGH FILL");
+						//	String temp = df.format(adcValues[3]);
+							theresultsform.setResultFieldDecay(" High Fill");
+							DBConnection.insertAlarm("Fail High Fill", ("Test ran by " + TestVars.getTestUservar() + " " + TestVars.gettestRoleVar()));
+							errorMessage = "HIGH FILL";
+							theresultsform.setResult("HIGH FILL " + filltoSettle);
+							fillFail = true;
 						 
-					 } */
+					 } 
 						 
-					 
-						
-					 /*
-						if ((firstValue - adcValues[3]) > 40) {
-								//phaseVar.setPhase(Phase.FAIL);
-								phaseCfg = theTestModeCfg.getPhaseCfg(phaseVar.getPhase());
-								System.out.println("FAILED DURING SETTLE");
-								pass = false;
-								String temp = df.format(adcValues[3]);
-								errorMessage = "GROSS LEAK";
-								theresultsform.setResult("FAIL GROSS LEAK" + temp);
-						}
-						
-						else {
-						pass = true;
-						//theresultsform.setResultFieldWait(false);
-                        //theresultsform.setResult(Double.toString(adcValues[3]) + TopForm.getUnits());
-						theresultsform.setResult("Delta P" + Double.toString((firstValue - adcValues[3]))+ " " + TopForm.getUnits());
-						}
-						
-					}
-					  	*/
 					 if( num.size()-1 > 10) {
 					 for (int k = 0; k < 10; k++) {
 						 num.remove(k);
@@ -344,7 +340,7 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 							pass = false;
 							String temp = df.format(averageSettle);
 							theresultsform.setResultFieldDecay(" Gross Leak");
-							 DBConnection.insertAlarm("Fail Gross Leak", ("Test ran by " + TestVars.getTestUservar()));
+							DBConnection.insertAlarm("Fail Gross Leak", ("Test ran by " + TestVars.getTestUservar() + " " + TestVars.gettestRoleVar()));
 							errorMessage = "GROSS LEAK";
 							theresultsform.setResult("FAIL GROSS LEAK " + temp);
 						 
@@ -359,7 +355,7 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 						 
 					 } */
 						
-						else {
+						else if(!fillFail){
 						pass = true;
 						//theresultsform.setResultFieldWait(false);
                      //theresultsform.setResult(Double.toString(adcValues[3]) + TopForm.getUnits());
@@ -493,7 +489,7 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 						String temp = df.format(ddecay);
 						errorMessage = "Fail Decay Leak";
 						theresultsform.setResult("FAIL Decay LEAK " + temp );
-					 DBConnection.insertAlarm("Fail Decay Leak", ("Test ran by " + TestVars.getTestUservar()));
+					 DBConnection.insertAlarm("Fail Decay Leak", ("Test ran by " + TestVars.getTestUservar() + " " + TestVars.gettestRoleVar()));
 						theresultsform.setResultFieldDecay(df.format(ddecay));
 					}  else {
 						//totalDecay = (firstValue - adcValues[3]);
@@ -522,12 +518,13 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 						}*/
 						theresultsform.setResultFieldDecay(df.format(totalDecay));
 						theresultsform.updateResultFieldPasses();
+						BatchVars.addOnePass();
 						//theresultsform.setResult(df.format(totalDecay)+ " " + TopForm.getUnits());
 						theresultsform.setResult("Passed last Test");
 						ADCDriver.sendData(turnGreenLightOn);
 						theresultsform.setResultFieldPass(true);
-						TestVars.setdidPass("Pass" + df.format(totalDecay));
-						ADCDriver.sendData(off);
+						TestVars.setdidPass("Pass");
+						//ADCDriver.sendData(off);
 						
 						
 					} else {
@@ -535,9 +532,10 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 						boolean turnRedLightOn[] = {false, false, false, false, false,false, true, false, false, false};
 						boolean off[] = {false, false, false, false, false,false, false, false, false, false};
 						ADCDriver.sendData(turnRedLightOn);
+						
 						TestVars.setdidPass("Failed Decay Test");
 						theresultsform.setResultFieldFail(true, errorMessage);
-						ADCDriver.sendData(off);
+						//ADCDriver.sendData(off);
 						fail = false;
 						testFail = true;
 				}
@@ -550,14 +548,17 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 				 if (stopCase) {
 					phaseVar.setPhase(Phase.STOPPED);
 					theresultsform.setResult("");
+					DBConnection.insertAlarm("Test Stopped!", ("Test stopped by " + TestVars.getTestUservar() + " " + TestVars.gettestRoleVar()));
 					StartButton.getInstance().setDisabled(true);	
 					stopCase = false;
+					fillFail = false;
 				 }
 				 else if(retreatCase) {
 					 
 					 phaseVar.setPhase(Phase.FINISHED);
 					 theresultsform.setResultFieldWait(true);
 					 retreatCase = false;
+					 fillFail = false;
 				 }
 					
 				 else if (pass || phaseVar.getPhase()== Phase.STOPPED || phaseVar.getPhase() == Phase.STOP_BACK || phaseVar.getPhase() == Phase.STOP_HBACK)  {
@@ -567,7 +568,9 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 					
 					phaseVar.setPhase(Phase.FAIL);
 					theresultsform.setResultFieldFailing(true, errorMessage);
+					BatchVars.addOneFail();
 					pass = true;
+					fillFail = false;
 					fail = true;
 				}
 				} catch (InterruptedException e) {
@@ -605,9 +608,17 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 
 			String timeStamp = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(Calendar.getInstance().getTime());
 			TestVars.setTestTimeStampvar(timeStamp);
-		    DBConnection.insertAudiTrail("Ran Test", ("Test ran by " + TestVars.getTestUservar()));
-		    DBConnection.insertLogs(TestVars.getTestModevar(), TestVars.getprogramName(),TestVars.getdidPass(), df.format(testAverageSettle), df.format(TestVars.getmaxPressureDrop()), df.format(TestVars.getChargevar()), df.format(totalDecay), TestVars.getTestUservar());	
+			BatchVars.Pressures.add(testAverageSettle);
+			for(int y = 0; y < BatchVars.Pressures.size(); y++) {
+				System.out.println(BatchVars.Pressures.get(y));
+			}
+			thebatchesform.updateFields();
+		    DBConnection.insertAudiTrail("Ran Test", ("Test ran by " + TestVars.getTestUservar() + " " + TestVars.gettestRoleVar()));
+		    DBConnection.insertLogs(TestVars.getTestModevar(), TestVars.getprogramName(),TestVars.getdidPass(), df.format(testAverageSettle), df.format(TestVars.getmaxPressureDrop()), df.format(TestVars.getChargevar()), df.format(totalDecay), TestVars.getTestUservar() + " " + TestVars.gettestRoleVar());	
 			ShowLogsScreen2.addDataLine();
+			TopForm.getInstance(null).setPressure("0.00000");	
+			Form.plotPanel.print();
+			Form.plotPanel.meprint();
 			
 		//interrupt();
 			}
@@ -641,6 +652,16 @@ theresultsform = (ResultsForm) VacuumChamberResultsForm.getInstance(null);
 				return (long)(TestVars.getClampTime()*1000);
 			case H_BACK:
 				return (long)(TestVars.getSliderTime()*1000);
+			case PASSV_BACK:
+				return (long)(TestVars.getClampTime()*1000);
+			case PASSH_BACK:
+				return (long)(TestVars.getSliderTime()*1000);
+			case STOPPED:
+				return (long) (3000);
+			case STOP_BACK:
+				return (long)(5000);
+			case STOP_HBACK:
+				return(long)(3000);
 			default:
 				break;
 		}

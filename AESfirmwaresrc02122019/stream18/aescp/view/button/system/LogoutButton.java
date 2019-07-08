@@ -19,7 +19,7 @@ public class LogoutButton extends Button {
 	public LogoutButton(int x, int y) {
 		super(BOTTOM_TYPE);
 		moveTo(x, y, 1);
-		config("resources/system/logout.png", "Logout", new Color(0xaaaaaa));
+		config("resources/system/logout.png", "Logout", new Color(0x228B22));
 		
 		addMouseListener(new MouseAdapter() {
 			@Override

@@ -25,10 +25,10 @@ public class LogsButton extends Button {
 			public void mouseReleased(MouseEvent e) {
 				super.mouseReleased(e);
 				// Select a new Screen for the browser
-			if(TestVars.getTestUservar() == "Operator") {	
+			if(TestVars.getTestUservar() == "Operator" || TestVars.getTestUservar() == "Supervisor") {	
 				  Object[] options = {"OK"};
 				    JOptionPane.showOptionDialog(null,
-				                   "No access allowed as an operator","Invalid Access",
+				                   "No access allowed as an operator or supervisor","Invalid Access",
 				                   JOptionPane.PLAIN_MESSAGE,
 				                   JOptionPane.PLAIN_MESSAGE,
 				                   null,

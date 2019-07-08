@@ -1,4 +1,5 @@
 package stream18.aescp.model;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -106,7 +107,7 @@ Connection con = null;
 		      timeStamp = new java.sql.Timestamp(date.getTime());
 
 		      // the mysql insert statement
-		      String query = " insert into alarms(Action, Details, Start_Date)"
+		      String query = " insert into Alarms(Action, Details, Start_Date)"
 		        + " values (?, ?, ?)";
 
 		      // create the mysql insert prepared statement
@@ -127,14 +128,20 @@ Connection con = null;
 	}
 		
 		public static void insertLogs(String testMode, String programName, String result,  String averageSettle, String maxDrop, String fillTime,String decay, String User) {
-			
+			java.util.Date date = null;
+		      java.sql.Timestamp timeStamp = null;
 		    try
 		    {
-		      Connection conn =  getConnection();
-		    
-		      // create a sql date object so we can use it in our INSERT statement
-		      Calendar calendar = Calendar.getInstance();
-		      java.sql.Date startDate = new java.sql.Date(calendar.getTime().getTime());
+			      Connection conn =  getConnection();
+				    
+			      // create a sql date object so we can use it in our INSERT statement
+			      Calendar calendar=Calendar.getInstance();
+			      calendar.setTime(new Date());
+			      java.sql.Date dt = new java.sql.Date(calendar.getTimeInMillis());
+			      java.sql.Time sqlTime=new java.sql.Time(calendar.getTime().getTime());
+			      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			      date = simpleDateFormat.parse(dt.toString()+" "+sqlTime.toString());
+			      timeStamp = new java.sql.Timestamp(date.getTime());
 
 		      // the mysql insert statement
 		      String query = " insert into test_log(testmode, program, result, average_settle, max_drop, fill_time, decay, user, startDate)"
@@ -153,7 +160,7 @@ Connection con = null;
 		      
 		      
 		      
-		      preparedStmt.setDate(9, startDate);
+		      preparedStmt.setTimestamp(9, timeStamp);
 		      
 
 		      preparedStmt.execute();
@@ -177,7 +184,7 @@ public static void insertUser(String Username, String Password, String role) {
 		      java.sql.Date startDate = new java.sql.Date(calendar.getTime().getTime());
 
 		      // the mysql insert statement
-		      String query = " insert into users(uname, psswd, role)"
+		      String query = " insert into Users(uname, psswd, role)"
 		        + " values (?, ?, ?)";
 
 		      // create the mysql insert prepared statement
@@ -228,7 +235,7 @@ public static void insertTest(String Username, String Password, String role) {
       System.err.println(e.getMessage());
     }
 }
-public static void insertCycles(int numPassed, int numFailed, String minDrop, String fillTime, String User) {
+public static void insertCycles(int numPassed, int numFailed, String minDrop, String fillTime, String User, String progname, String meanpressure, String rangepressure, String stdpressure) {
 	 java.util.Date date = null;
      java.sql.Timestamp timeStamp = null;
 	
@@ -246,8 +253,8 @@ public static void insertCycles(int numPassed, int numFailed, String minDrop, St
      timeStamp = new java.sql.Timestamp(date.getTime());
 
       // the mysql insert statement
-      String query = " insert into cycles(numPassed, numFailed, minDrop, fillTime, User, startDate)"
-        + " values (?, ?, ?, ?, ?, ?)";
+      String query = " insert into Cycles(numPassed, numFailed, minDrop, fillTime, User, startDate, progname, meanpressure, rangepressure, stdpressure)"
+        + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
       // create the mysql insert prepared statement
       PreparedStatement preparedStmt = conn.prepareStatement(query);
@@ -257,6 +264,10 @@ public static void insertCycles(int numPassed, int numFailed, String minDrop, St
       preparedStmt.setString (4, fillTime);
       preparedStmt.setString(5, User);
       preparedStmt.setTimestamp(6, timeStamp);
+      preparedStmt.setString(7, progname);
+      preparedStmt.setString(8,  meanpressure);
+      preparedStmt.setString(9,  rangepressure);
+      preparedStmt.setString(10, stdpressure);
 
       preparedStmt.execute();
       
@@ -283,11 +294,13 @@ public static void insertCycles(int numPassed, int numFailed, String minDrop, St
 			stmt.executeUpdate("delete from Auditrails");
 
 			 stmt=conn.createStatement();  
-		     stmt.executeUpdate("delete from cycles");
+		     stmt.executeUpdate("delete from Cycles");
 
 			
 			stmt=conn.createStatement();  
-			stmt.executeUpdate("delete from alarms");
+			stmt.executeUpdate("delete from Alarms");
+			stmt=conn.createStatement();  
+			stmt.executeUpdate("delete from test_log");
 
           // create the mysql insert prepared statement
 
@@ -299,8 +312,16 @@ public static void insertCycles(int numPassed, int numFailed, String minDrop, St
           System.err.println("Got an exception!");
           System.err.println(e.getMessage());
         }
-    }
-/*public static String[] getTests() {
+        
+        try {
+			String[] b = new String[] {"bash", "-c", "./deleteplots.sh"};
+	        Process p = Runtime.getRuntime().exec(b);
+			p.waitFor();
+		} catch (IOException |InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+    }/*public static String[] getTests() {
 	
     try
     {

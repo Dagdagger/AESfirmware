@@ -31,35 +31,36 @@ public class HomeScreen extends Screen {
 
     	
  
-    	final int BTN_MARGIN_H = 20;
-    	final int BTN_MARGIN_V = 30;
+    	final int BTN_MARGIN_H = 100;
+    	final int BTN_MARGIN_V = 110;
     	
     	// Add 8 buttons in two rows
     	int x = BTN_MARGIN_H;
     	int y = BTN_MARGIN_V;
-    	int gap = (Browser.SCREEN_WIDTH - LEFT_WIDTH - (2*BTN_MARGIN_H) + 18) / 5;
+    	int gap = 150 + (Browser.SCREEN_WIDTH - LEFT_WIDTH - (2*BTN_MARGIN_H) + 18) / 5;
+    	
+    
     	int vgap = (BOTTOM_HEIGHT - (2*BTN_MARGIN_V)) / 2;
 
     	
     	
     	
     	// Coordinates are relative to its container, the bottom panel
-    	bottom.add(ReadyScreenButton.getInstance(x, y));
-    	x += gap; 
+    	//bottom.add(ReadyScreenButton.getInstance(x, y));
+    	x = 40; 
     	bottom.add(new ModeButton(x, y, this));
     	x += gap;  
-    	bottom.add(SetupButton.getInstance(x, y));
+    	bottom.add(LogsButton.getInstance(x, y));
     
     	x += gap;
-    	bottom.add(LogsButton.getInstance(x, y));
+    	bottom.add(SystemButton.getInstance(x, y));
     	x += gap;
 
-    	bottom.add(OpenButton.getInstance(x, y));
+    	//bottom.add(SystemButton.getInstance(x, y));
          x += gap;
     	x = BTN_MARGIN_H;//Simo
     	y += vgap;///Simo
     	
-    	bottom.add(SystemButton.getInstance(x, y));
     	
     	x += gap;
     	x = BTN_MARGIN_H;//Simo

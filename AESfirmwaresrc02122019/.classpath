@@ -18,6 +18,12 @@
 	<classpathentry kind="lib" path="javacomponents/mysql-connector-java-8.0.15.jar"/>
 	<classpathentry kind="lib" path="/socketTester/mysql-connector-java-5.1.47.jar"/>
 	<classpathentry kind="lib" path="com.lowagie.text-2.1.7.jar"/>
-	<classpathentry kind="lib" path="itextpdf-5.5.13.jar"/>
+	<classpathentry kind="lib" path="itext-licensekey-2.0.4-javadoc.jar"/>
+	<classpathentry kind="lib" path="itext-licensekey-2.0.4.jar"/>
+	<classpathentry kind="lib" path="bcmail-jdk15on-1.60.jar"/>
+	<classpathentry kind="lib" path="bcpkix-jdk15on-1.60.jar"/>
+	<classpathentry kind="lib" path="bcprov-jdk15on-1.60.jar"/>
+	<classpathentry kind="lib" path="itext2-2.1.16.jar"/>
+	<classpathentry kind="lib" path="commons-lang3-3.9.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

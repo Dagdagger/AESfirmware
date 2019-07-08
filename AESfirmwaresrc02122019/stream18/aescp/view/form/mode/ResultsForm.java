@@ -17,7 +17,9 @@ import stream18.aescp.controller.TestStatus;
 import stream18.aescp.controller.TestVars;
 import stream18.aescp.model.DBConnection;
 import stream18.aescp.model.Test;
+import stream18.aescp.view.button.StartBatchesButton;
 import stream18.aescp.view.button.StartButton;
+import stream18.aescp.view.button.StopBatchesButton;
 import stream18.aescp.view.button.StopButton;
 import stream18.aescp.view.form.BigLabel;
 import stream18.aescp.view.form.Form;
@@ -124,13 +126,16 @@ public abstract class ResultsForm extends Form {
 	}
 	
 	public void updateResultFieldCycles() {
-
+		if(TestVars.getCycles() != 0) {
 		cycles++;
+		}
 		if(cycles == TestVars.getCycles()) {
-			DBConnection.insertCycles(passes, cycles-passes, Double.toString(TestVars.getmaxPressureDrop()), Double.toString(TestVars.getChargevar()), TestVars.getTestUservar());
+		//	DBConnection.insertCycles(passes, cycles-passes, Double.toString(TestVars.getmaxPressureDrop()), Double.toString(TestVars.getChargevar()), TestVars.getTestUservar(),TestVars.getprogramName());
 			cycles = 0;
+			passes = 0;
 		}
 		testField.setText(Integer.toString(cycles) + "/" + Integer.toString(TestVars.getCycles()));
+		
 	}
 	public void setInitialFieldCycles(int thecycles) {
 		cycles = 0;
@@ -152,8 +157,10 @@ public abstract class ResultsForm extends Form {
 	
 	
 	public void updateResultFieldPasses() {
-		passes++;
+		if(passes+1 < cycles) {
+		passes++;}
 		passField.setText(Integer.toString(passes) + "/" + Integer.toString(TestVars.getCycles()));
+		
 	}
 	
 	

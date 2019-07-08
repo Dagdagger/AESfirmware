@@ -3,6 +3,7 @@ package stream18.aescp.view.screen.logs;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,24 +18,16 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Vector;
 
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.ExceptionConverter;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.codec.Base64.OutputStream;
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import stream18.aescp.Browser;
@@ -70,13 +63,20 @@ public class ShowAudiTrails extends Screen {
 		java.sql.Statement stmt=con.createStatement();  
 		
 		rs = stmt.executeQuery("select * from Auditrails");
-		Auditable = new JTable(buildTableModel(rs));
+		DefaultTableModel yee = buildTableModel(rs);
+		Auditable = new JTable(yee);
+
 		JScrollPane pane = new JScrollPane(Auditable);
 		Auditable.setEnabled(false);
 		pane.setBounds(new Rectangle(0,  0, Browser.SCREEN_WIDTH - LEFT_WIDTH, BOTTOM_HEIGHT));
 		System.out.println("I Was here!");
 		Auditable.repaint();
+		SwingUtilities.updateComponentTreeUI(pane);
+		yee.fireTableDataChanged();
+		Auditable.revalidate();
+		SwingUtilities.updateComponentTreeUI(pane);
        	bottom.add(pane);   
+       	SwingUtilities.updateComponentTreeUI(pane);
 		con.close(); 
 	    }
     	
@@ -104,15 +104,13 @@ public class ShowAudiTrails extends Screen {
 
 
 	public static ShowAudiTrails getInstance() throws SQLException {
-        if (theShowAudiTrails == null) {
         	theShowAudiTrails = new ShowAudiTrails();
-        }
         
         // This has to be done every time, as the status bar is shared among
         // all the Screens that have a status
         theShowAudiTrails.addStatus();
         theShowAudiTrails.addTop();
-    	TopForm.getInstance(null).showLogsTopForm();   	
+    	TopForm.getInstance(null).showLogsTopForm("Trails");   	
     	
         return theShowAudiTrails;
 	}
@@ -132,8 +130,8 @@ public class ShowAudiTrails extends Screen {
 	}
 	
 public static Paragraph addTitle(String title){
-        //Font fontbold = FontFactory.getFont("Times-Roman", 40, Font.BOLD);
-        Paragraph p = new Paragraph(title);
+        Font fontbold = FontFactory.getFont("Times-Roman", 40, Font.BOLD);
+        Paragraph p = new Paragraph(title, fontbold);
         p.setSpacingAfter(20);
         p.setSpacingBefore(20);
         p.setAlignment(1); // Center
@@ -145,13 +143,26 @@ public static Paragraph addTitle(String title){
 		 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		 try {
 		 int count=table.getRowCount();
-		   Document document=new Document();
+		   Document document=new Document(PageSize.A4.rotate());
 
-		         PdfWriter writer =  PdfWriter.getInstance(document, byteArrayOutputStream);
+		         PdfWriter writer =  PdfWriter.getInstance(document,  byteArrayOutputStream);
 		          document.open();
 		          PdfPTable tab=new PdfPTable(4);
-				  Image img = Image.getInstance("resources/logo.png");
-		          document.add(img);
+		      	  BufferedImage img = null;
+		  		  InputStream file = Button.class.getClassLoader().getResourceAsStream("resources/logo.png");
+		  		  img = ImageIO.read(file);
+		  		PdfContentByte pdfCB = new PdfContentByte(writer);
+		        Image image = Image.getInstance(pdfCB, img, 1);
+		          document.add(image);
+		          
+		          BufferedImage imgtwo = null;
+		          InputStream filetwo = Button.class.getClassLoader().getResourceAsStream("resources/logoevolution.png");
+		          imgtwo = ImageIO.read(filetwo);
+		          Image imagetwo = Image.getInstance(pdfCB, imgtwo, 1);
+		          
+		          imagetwo.setAbsolutePosition(500, 480);
+		          
+		          document.add(imagetwo);
 		          document.add(addTitle("AudiTrails"));
 		          tab.addCell("Num");
 		          tab.addCell("Action");
@@ -175,11 +186,11 @@ public static Paragraph addTitle(String title){
 		   document.add(tab);
 		   document.close();
 		   byte[] pdfBytes = byteArrayOutputStream.toByteArray();
-		   FileOutputStream out = new FileOutputStream("out.pdf");
+		   FileOutputStream out = new FileOutputStream("audiTrailsTable.pdf");
 		   out.write(pdfBytes);
 		   out.close();
 		       }
-		       catch(Exception e){}
+		       catch(Exception e){e.printStackTrace();}
 		  
 		   // processBuilder.command("bash", "-c", "cd ~/");
 			try {
@@ -192,7 +203,7 @@ public static Paragraph addTitle(String title){
 			}
 			}
 	 
-	 private void addHeader(PdfWriter writer){
+	/* private void addHeader(PdfWriter writer){
 	        PdfPTable header = new PdfPTable(2);
 	        try {
 	            // set defaults
@@ -227,7 +238,7 @@ public static Paragraph addTitle(String title){
 	            throw new ExceptionConverter(e);
 	        }
 	    }
-		  
+		  */
 		  
 		 
 		  

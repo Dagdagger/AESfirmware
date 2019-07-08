@@ -17,7 +17,7 @@ public class ShowAudiTrailsButton extends Button {
 	public ShowAudiTrailsButton(int x, int y) {
 		super(BOTTOM_TYPE);
 		moveTo(x, y, 1);
-		config("resources/logs/ShowLogs.png", "AudiTrails", new Color(0xFF1388));
+		config("resources/logs/ShowLogs.png", "AudiTrails", new Color(0x32CD32));
 		
 		addMouseListener(new MouseAdapter() {
 			@Override

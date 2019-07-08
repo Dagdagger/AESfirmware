@@ -16,12 +16,15 @@ import stream18.aescp.model.Program;
 import stream18.aescp.model.Test;
 import stream18.aescp.model.TestModeCfgManager;
 import stream18.aescp.view.button.Button;
+import stream18.aescp.view.button.StartBatchesButton;
 import stream18.aescp.view.button.StartButton;
+import stream18.aescp.view.button.StopBatchesButton;
 import stream18.aescp.view.button.StopButton;
 import stream18.aescp.view.button.system.LoginButton;
 import stream18.aescp.view.form.ProgramForm;
 import stream18.aescp.view.form.StatusForm;
 import stream18.aescp.view.form.TopForm;
+import stream18.aescp.view.form.mode.BatchesForm;
 import stream18.aescp.view.form.mode.ResultsForm;
 import stream18.aescp.view.form.mode.SettingsForm;
 import stream18.aescp.view.form.mode.VacuumChamberResultsForm;
@@ -50,6 +53,7 @@ public class Controller {
 	private static TestPhaser theTestPhaser; 
 	private static TestModeCfgManager theTestModeCfgManager;
 	private static TestVars theTestVars;
+	private static BatchVars theBatchVars;
 	
 
 	public Controller() {
@@ -61,6 +65,10 @@ public class Controller {
 		// for us to be able to change the phase label on the UI
 		theTestPhaseVar = new TestPhase();
 		theTestVars= new TestVars();	
+		theBatchVars = new BatchVars();
+		
+		StartBatchesButton.getInstance().setDisabled(false);
+		StopBatchesButton.getInstance().setDisabled(false);
 		
 	 
 		// Register as observer for some events
@@ -90,6 +98,11 @@ public class Controller {
 						
 						ResultsForm results = theTestPhaser.getResultsForm();
 						results.dateField.setText(java.time.LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+						BatchesForm batches = theTestPhaser.getBatchesForm();
+						BatchVars.addOneTest();
+						batches.updateFields();
+						((StatusForm)StatusForm.getInstance(null)).updateTime();
+
 				}
 			}
 			
@@ -101,6 +114,7 @@ public class Controller {
 			public void actionPerformed(ActionEvent event) {
 				switch(event.getID()) {
 					case Button.STOP_TEST_REQ:	
+						((StatusForm)StatusForm.getInstance(null)).updateTime();
 						System.out.println("Test stop requested!");
 						boolean bleedValves[] = {true, true, false, false, false,false, false, false, false, true};
 						boolean cleanValves[] = {false, false, false, false, false,false, false, false, false, false};
@@ -202,7 +216,7 @@ if (theTestPhaseVar.getPhase() == Phase.RESULTS) {
 				switch (status.getStatus()) {
 					case SELECT:			
 						// Disable both Start and Stop buttons
-						StartButton.getInstance().setDisabled(true);						
+                        StartButton.getInstance().setDisabled(true);						
 						StopButton.getInstance().setDisabled(true);
 					
 						break;

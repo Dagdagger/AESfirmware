@@ -10,7 +10,11 @@ import java.sql.SQLException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import com.lowagie.text.DocumentException;
+
 import stream18.aescp.Browser;
+import stream18.aescp.controller.TestVars;
+import stream18.aescp.model.DBConnection;
 import stream18.aescp.view.button.Button;
 import stream18.aescp.view.screen.logs.ShowAlarms;
 import stream18.aescp.view.screen.logs.ShowAudiTrails;
@@ -51,6 +55,8 @@ public class TurntoPDFButton extends Button {
 						j.print();
 						l.print();
 						m.print();
+						l.print();
+						DBConnection.insertAudiTrail("Exported logs to pdf", "User: "+ TestVars.getTestUservar());
 						
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block

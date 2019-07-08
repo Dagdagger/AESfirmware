@@ -4,7 +4,10 @@ import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import stream18.aescp.Browser;
 import stream18.aescp.view.button.Button;
+import stream18.aescp.view.screen.HomeScreen;
+import stream18.aescp.view.screen.system.AddUserScreen;
 import stream18.aescp.view.screen.system.EditUserScreen;
 
 public class AddUserButton extends Button {
@@ -20,8 +23,7 @@ public class AddUserButton extends Button {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				super.mouseReleased(e);
-				EditUserScreen.getInstance().setActive(null);
-			}
+				Browser.getInstance().setScreen(AddUserScreen.getInstance(), HomeScreen.getInstance());			}
 		});
 	}	
 
